@@ -124,7 +124,24 @@ const SettingsModule: Module = {
 			...GetParameterHandler.handle("ImageSource.I0.Sensor.ToneMapping"),
 		);
 
-		// This is the identical to info/speed, I just couldn't decide where to put it
+		settingsModule.on(
+			"POST",
+			"/proportionalspeed",
+			CapabilitiesMiddleware("PTZ"),
+			...SetIntParameterHandler.handle(
+				"PTZ.Various.V1.MaxProportionalSpeed",
+				1000,
+			),
+		);
+
+		settingsModule.on(
+			"GET",
+			"/proportionalspeed",
+			CapabilitiesMiddleware("PTZ"),
+			...GetParameterHandler.handle("PTZ.Various.V1.MaxProportionalSpeed"),
+		);
+
+		// This is identical to info/speed, I just couldn't decide where to put it
 		settingsModule.on(
 			"GET",
 			"/speed",
