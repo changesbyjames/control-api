@@ -1,4 +1,6 @@
+import { timingSafeEqual } from "node:crypto";
 import { WebSocket, WebSocketServer } from "ws";
+import type { IncomingMessage } from "node:http";
 
 import type {
 	Camera,
@@ -28,12 +30,26 @@ class WebSocketManager {
 		};
 	}
 
-	setupWebsocket(port: number) {
+	setupWebsocket(port: number, sharedKey: string) {
 		this.wss = new WebSocketServer({ port: port });
+		const sharedKeyBuffer = Buffer.from(sharedKey, "utf8");
 
-		this.wss.on("connection", (ws) => {
+		this.wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
+			const url = new URL(req.url ?? "", `http://${req.headers.host}`);
+			const authParam = url.searchParams.get("authorization");
+			const [type, key] = authParam?.split(" ") ?? [];
+			const keyBuffer = Buffer.from(key ?? "", "utf8");
+
+			if (
+				type !== "ApiKey" ||
+				keyBuffer.length !== sharedKeyBuffer.length ||
+				!timingSafeEqual(keyBuffer, sharedKeyBuffer)
+			) {
+				ws.close(4401, "Unauthorized");
+				return;
+			}
+
 			console.log("Client connected");
-
 			ws.send("Successfully connected to websocket");
 		});
 

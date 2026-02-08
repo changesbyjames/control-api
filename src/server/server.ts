@@ -17,6 +17,7 @@ class Server {
 	readonly app: Hono<{ Variables: constants.Variables }>;
 
 	// private
+	#sharedKey!: string;
 	#serviceConfig!: ServiceConfig;
 	#modules: { [key: string]: Module } = {};
 
@@ -25,12 +26,12 @@ class Server {
 			Variables: constants.Variables;
 		}>();
 
-		let sharedKey = process.env[constants.sharedKeyKey];
-		if (!sharedKey) {
+		this.#sharedKey = process.env[constants.sharedKeyKey] ?? "";
+		if (!this.#sharedKey) {
 			throw new Error("sharedKey not found in environment");
 		}
 
-		this.app.use(AuthorizationMiddleware(sharedKey));
+		this.app.use(AuthorizationMiddleware(this.#sharedKey));
 	}
 
 	registerModule(module: Module) {
@@ -63,7 +64,10 @@ class Server {
 	}
 
 	async startServer() {
-		managers.WebSocketManager.setupWebsocket(this.#serviceConfig.websocketPort);
+		managers.WebSocketManager.setupWebsocket(
+			this.#serviceConfig.websocketPort,
+			this.#sharedKey,
+		);
 		serve(
 			{
 				fetch: this.app.fetch,
