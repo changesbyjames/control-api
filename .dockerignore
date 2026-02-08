@@ -1,0 +1,13 @@
+node_modules
+dist
+npm-debug.log
+.git
+.gitignore
+.env
+.editorconfig
+.prettierrc
+.prettierignore
+.lintstagedrc
+*.md
+!LICENSE.md
+.husky

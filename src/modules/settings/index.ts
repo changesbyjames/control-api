@@ -35,6 +35,20 @@ const SettingsModule: Module = {
 		);
 
 		settingsModule.on(
+			"GET",
+			"/spotfocus",
+			CapabilitiesMiddleware("SpotFocus"),
+			...GetParameterHandler.handle("PTZ.UserAdv.U1.SpotFocus"),
+		);
+
+		settingsModule.on(
+			"POST",
+			"/spotfocus",
+			CapabilitiesMiddleware("SpotFocus"),
+			...SetParameterHandler.handle("PTZ.UserAdv.U1.SpotFocus"),
+		);
+
+		settingsModule.on(
 			"POST",
 			"/saturation",
 			CapabilitiesMiddleware("Appearance"),

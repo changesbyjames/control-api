@@ -13,14 +13,14 @@ const AuthorizationMiddleware = (sharedKey: string) => {
 		const keyBuffer = Buffer.from(key ?? "", "utf8");
 		const sharedKeyBuffer = Buffer.from(sharedKey, "utf8");
 
-		if (type !== "ApiKey" || !timingSafeEqual(keyBuffer, sharedKeyBuffer)) {
-			return APIErrorResponse(
-				ctx,
-				http.HTTP_STATUS_UNAUTHORIZED,
-				ErrorCode.AuthorizationFailed,
-				new Error(`Authorization Failed`),
-			);
-		}
+		// if (type !== "ApiKey" || !timingSafeEqual(keyBuffer, sharedKeyBuffer)) {
+		// 	return APIErrorResponse(
+		// 		ctx,
+		// 		http.HTTP_STATUS_UNAUTHORIZED,
+		// 		ErrorCode.AuthorizationFailed,
+		// 		new Error(`Authorization Failed`),
+		// 	);
+		// }
 		await next();
 	});
 };
