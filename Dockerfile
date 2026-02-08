@@ -21,4 +21,7 @@ COPY --from=builder /app/dist ./dist
 
 VOLUME ["/app/configs"]
 
-CMD ["node", "dist/index.js"]
+# For distro
+# CMD ["node", "dist/index.js"]
+# For shell-less
+CMD ["dist/index.js"]
