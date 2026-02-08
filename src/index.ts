@@ -14,6 +14,8 @@ async function main(): Promise<void> {
 		server.registerModule(m);
 	});
 
+	// Once all the modules are registered, create the OpenAPI documentation
+	server.bootstrapOpenAPI();
 	server.startServer();
 }
 
