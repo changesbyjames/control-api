@@ -68,7 +68,7 @@ const PTZHandler: Handler = {
 					ctx,
 					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
 					ErrorCode.VAPIXCallFailed,
-					new Error("Unable to make VAPIX call", { cause: error }),
+					errors.ErrUnableToCallVAPIX(error),
 				);
 			}
 
@@ -77,7 +77,7 @@ const PTZHandler: Handler = {
 					ctx,
 					http.HTTP_STATUS_BAD_GATEWAY,
 					ErrorCode.VAPIXCallFailed,
-					new Error("VAPIX call failed", { cause: await response.text() }),
+					errors.ErrVAPIXCallFailed(await response.text()),
 				);
 			}
 

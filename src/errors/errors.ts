@@ -1,3 +1,5 @@
 export const ErrCameraNotSet = new Error("Camera not set on context");
-export const ErrUnableToCallVAPIX = new Error("Unable to make VAPIX call");
-export const ErrVAPIXCallFailed = new Error("VAPIX call failed");
+export const ErrUnableToCallVAPIX = (cause: any) =>
+	new Error("Unable to make VAPIX call", { cause: cause });
+export const ErrVAPIXCallFailed = (cause: any) =>
+	new Error("VAPIX call failed", { cause: cause });

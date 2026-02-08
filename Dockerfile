@@ -9,8 +9,10 @@ COPY . .
 RUN npm run build
 
 # Production stage
-#FROM gcr.io/distroless/nodejs22-debian12:nonroot
-FROM node:22-alpine
+# Use this if a shell is needed for debugging
+# FROM node:22-alpine
+# Use this for shell-less production
+FROM gcr.io/distroless/nodejs22-debian12:nonroot
 
 WORKDIR /app
 
