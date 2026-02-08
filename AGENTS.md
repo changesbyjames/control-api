@@ -134,12 +134,10 @@ Copy `.env.example` to `.env`:
 - `SHARED_KEY` - API authentication key
 - `{CAMERA}_USERNAME` / `{CAMERA}_PASSWORD` - Per-camera VAPIX credentials (uppercase camera name)
 
-## Key Files
+## Config Files
 
-- `configs/cameras.json` - Camera definitions and capabilities
-- `configs/service.json` - Server ports, enabled modules
-- `openapi.yaml` - Full API specification
-- `capabilities.xml` - Axis camera capabilities reference
+- `cameras.json` - Camera definitions and capabilities
+- `service.json` - Server ports, enabled modules
 
 ## Path Aliases
 
