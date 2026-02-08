@@ -7,6 +7,7 @@ import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
 import { APIErrorResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
+import * as errors from "@/errors/errors";
 
 const rpanAdapter = z.object({
 	degrees: z.number().min(-360.0).and(z.number().max(360.0)),
@@ -34,7 +35,7 @@ const RPanHandler: Handler = {
 					ctx,
 					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
 					ErrorCode.InvalidContextCode,
-					new Error("Camera not set on context"),
+					errors.ErrCameraNotSet,
 				);
 			}
 

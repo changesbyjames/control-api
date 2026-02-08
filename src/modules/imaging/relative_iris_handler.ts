@@ -7,6 +7,7 @@ import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
 import { APIErrorResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
+import * as errors from "@/errors/errors";
 
 const ririsAdapter = z.object({
 	value: z.number().min(-9999).and(z.number().max(9999)),
@@ -34,7 +35,7 @@ const IRrisHandler: Handler = {
 					ctx,
 					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
 					ErrorCode.InvalidContextCode,
-					new Error("Camera not set on context"),
+					errors.ErrCameraNotSet,
 				);
 			}
 

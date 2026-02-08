@@ -2,6 +2,7 @@ import { createMiddleware } from "hono/factory";
 import { constants as http } from "http2";
 
 import { ErrorCode } from "@/errors/error_codes";
+import * as errors from "@/errors/errors";
 import * as constants from "@/constants";
 import type { Camera } from "@/models";
 import { APIErrorResponse } from "@/utils";
@@ -15,7 +16,7 @@ const CapabilitiesMiddleware = (...capabilitiesList: string[]) => {
 				ctx,
 				http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
 				ErrorCode.InvalidContextCode,
-				new Error("Camera not set on context"),
+				errors.ErrCameraNotSet,
 			);
 		}
 
