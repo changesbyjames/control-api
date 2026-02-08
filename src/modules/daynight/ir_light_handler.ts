@@ -42,7 +42,7 @@ const IrLightHandler: Handler = {
 				);
 			}
 
-			let url = VAPIXManager.URLBuilder("lightcontrol", camera.host);
+			let url = VAPIXManager.URLBuilder(camera.host, "lightcontrol");
 			let data = {
 				apiVersion: "1.0",
 				context: "light",
@@ -55,8 +55,8 @@ const IrLightHandler: Handler = {
 			let response;
 			try {
 				response = await VAPIXManager.makeAPICall(
-					url,
 					camera.client,
+					url,
 					"POST",
 					data,
 				);

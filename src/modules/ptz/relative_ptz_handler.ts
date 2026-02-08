@@ -51,7 +51,7 @@ const RPTZHandler: Handler = {
 				);
 			}
 
-			let url = VAPIXManager.URLBuilder("com/ptz", camera.host, {
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
 				...(rptz.pan !== undefined && { pan: rptz.pan }),
 				...(rptz.tilt !== undefined && { tilt: rptz.tilt }),
 				...(rptz.zoom !== undefined && { zoom: rptz.zoom }),
@@ -59,7 +59,7 @@ const RPTZHandler: Handler = {
 
 			let response;
 			try {
-				response = await VAPIXManager.makeAPICall(url, camera.client);
+				response = await VAPIXManager.makeAPICall(camera.client, url);
 			} catch (error) {
 				return APIErrorResponse(
 					ctx,

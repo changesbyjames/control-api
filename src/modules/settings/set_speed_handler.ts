@@ -39,13 +39,13 @@ const SetSpeedHandler: Handler = {
 				);
 			}
 
-			let url = VAPIXManager.URLBuilder("com/ptz", camera.host, {
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
 				speed: speed.value,
 			});
 
 			let response;
 			try {
-				response = await VAPIXManager.makeAPICall(url, camera.client);
+				response = await VAPIXManager.makeAPICall(camera.client, url);
 			} catch (error) {
 				return APIErrorResponse(
 					ctx,
@@ -64,12 +64,12 @@ const SetSpeedHandler: Handler = {
 				);
 			}
 
-			url = VAPIXManager.URLBuilder("com/ptz", camera.host, {
+			url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
 				query: "speed",
 			});
 
 			try {
-				response = await VAPIXManager.makeAPICall(url, camera.client);
+				response = await VAPIXManager.makeAPICall(camera.client, url);
 			} catch (error) {
 				return APIErrorResponse(
 					ctx,

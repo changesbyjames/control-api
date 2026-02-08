@@ -44,13 +44,13 @@ const AreazoomHandler: Handler = {
 
 			let coordinates = [areazoom.x, areazoom.y, areazoom.z].join(",");
 
-			let url = VAPIXManager.URLBuilder("com/ptz", camera.host, {
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
 				areazoom: coordinates,
 			});
 
 			let response;
 			try {
-				response = await VAPIXManager.makeAPICall(url, camera.client);
+				response = await VAPIXManager.makeAPICall(camera.client, url);
 			} catch (error) {
 				return APIErrorResponse(
 					ctx,

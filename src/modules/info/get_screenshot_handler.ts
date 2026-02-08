@@ -21,11 +21,11 @@ const GetScreenshotHandler: Handler = {
 				);
 			}
 
-			let url = VAPIXManager.URLBuilder("jpg/image", camera.host);
+			let url = VAPIXManager.URLBuilder(camera.host, "jpg/image");
 
 			let response;
 			try {
-				response = await VAPIXManager.makeAPICall(url, camera.client);
+				response = await VAPIXManager.makeAPICall(camera.client, url);
 			} catch (error) {
 				return APIErrorResponse(
 					ctx,

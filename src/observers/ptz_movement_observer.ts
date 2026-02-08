@@ -33,11 +33,11 @@ const PTZObserver: Observer = {
 			is_moving = true;
 		}
 
-		let url = VAPIXManager.URLBuilder("com/ptz", camera.host, {
+		let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
 			query: query,
 		});
 
-		let response = await VAPIXManager.makeAPICall(url, camera.client);
+		let response = await VAPIXManager.makeAPICall(camera.client, url);
 		let info = formatPosition(await response.text());
 		msg.data = {
 			is_moving: is_moving,

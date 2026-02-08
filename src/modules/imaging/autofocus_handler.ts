@@ -39,13 +39,13 @@ const AutofocusHandler: Handler = {
 				);
 			}
 
-			let url = VAPIXManager.URLBuilder("com/ptz", camera.host, {
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
 				autofocus: autofocus.state,
 			});
 
 			let response;
 			try {
-				response = await VAPIXManager.makeAPICall(url, camera.client);
+				response = await VAPIXManager.makeAPICall(camera.client, url);
 			} catch (error) {
 				return APIErrorResponse(
 					ctx,

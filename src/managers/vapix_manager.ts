@@ -6,13 +6,14 @@ import { constants as http } from "http2";
 import { APIErrorResponse, formatPosition } from "@/utils";
 import type { Camera } from "@/models";
 import { ErrorCode } from "@/errors/error_codes";
+import * as errors from "@/errors/errors";
 
 class VAPIXManager {
 	constructor() {}
 
 	async makeAPICall(
-		url: string,
 		client: DigestClient,
+		url: string,
 		method: RequestInit["method"] = "GET",
 		body?: any,
 	): Promise<Response> {
@@ -33,7 +34,7 @@ class VAPIXManager {
 		}
 	}
 
-	URLBuilder(api: string, target: string, URLParams?: any): string {
+	URLBuilder(target: string, api: string, URLParams?: any): string {
 		const params = new URLSearchParams(
 			Object.assign(
 				{
@@ -51,14 +52,14 @@ class VAPIXManager {
 		target: Camera,
 		param: string,
 	): Promise<Response> {
-		let url = this.URLBuilder("param", target.host, {
+		let url = this.URLBuilder(target.host, "param", {
 			action: "list",
 			group: param,
 		});
 
 		let response;
 		try {
-			response = await this.makeAPICall(url, target.client);
+			response = await this.makeAPICall(target.client, url);
 		} catch (error) {
 			return APIErrorResponse(
 				ctx,
@@ -87,14 +88,14 @@ class VAPIXManager {
 		param: string,
 		value: any,
 	): Promise<Response> {
-		let url = this.URLBuilder("param", target.host, {
+		let url = this.URLBuilder(target.host, "param", {
 			action: "update",
 			[param]: value,
 		});
 
 		let response;
 		try {
-			response = await this.makeAPICall(url, target.client);
+			response = await this.makeAPICall(target.client, url);
 		} catch (error) {
 			return APIErrorResponse(
 				ctx,

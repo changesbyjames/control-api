@@ -55,13 +55,13 @@ const IrHandler: Handler = {
 					break;
 			}
 
-			let url = VAPIXManager.URLBuilder("com/ptz", camera.host, {
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
 				ircutfilter: irFilter,
 			});
 
 			let response;
 			try {
-				response = await VAPIXManager.makeAPICall(url, camera.client);
+				response = await VAPIXManager.makeAPICall(camera.client, url);
 			} catch (error) {
 				return APIErrorResponse(
 					ctx,
@@ -80,7 +80,7 @@ const IrHandler: Handler = {
 				);
 			}
 
-			url = VAPIXManager.URLBuilder("lightcontrol", camera.host);
+			url = VAPIXManager.URLBuilder(camera.host, "lightcontrol");
 			let data = {
 				apiVersion: "1.0",
 				context: "light",
@@ -95,8 +95,8 @@ const IrHandler: Handler = {
 
 			try {
 				response = await VAPIXManager.makeAPICall(
-					url,
 					camera.client,
+					url,
 					"POST",
 					data,
 				);
