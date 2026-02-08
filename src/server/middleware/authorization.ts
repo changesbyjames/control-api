@@ -5,6 +5,7 @@ import { timingSafeEqual } from "node:crypto";
 import { ErrorCode } from "@/errors/error_codes";
 import * as constants from "@/constants";
 import { APIErrorResponse } from "@/utils";
+import * as errors from "@/errors/errors";
 
 const AuthorizationMiddleware = (sharedKey: string) => {
 	return createMiddleware<constants.Env>(async (ctx, next) => {
@@ -13,14 +14,18 @@ const AuthorizationMiddleware = (sharedKey: string) => {
 		const keyBuffer = Buffer.from(key ?? "", "utf8");
 		const sharedKeyBuffer = Buffer.from(sharedKey, "utf8");
 
-		// if (type !== "ApiKey" || !timingSafeEqual(keyBuffer, sharedKeyBuffer)) {
-		// 	return APIErrorResponse(
-		// 		ctx,
-		// 		http.HTTP_STATUS_UNAUTHORIZED,
-		// 		ErrorCode.AuthorizationFailed,
-		// 		new Error(`Authorization Failed`),
-		// 	);
-		// }
+		if (
+			type !== "ApiKey" ||
+			keyBuffer.length !== sharedKeyBuffer.length ||
+			!timingSafeEqual(keyBuffer, sharedKeyBuffer)
+		) {
+			return APIErrorResponse(
+				ctx,
+				http.HTTP_STATUS_UNAUTHORIZED,
+				ErrorCode.AuthorizationFailed,
+				errors.ErrAuthFailed,
+			);
+		}
 		await next();
 	});
 };
