@@ -19,6 +19,7 @@ import RZoomHandler from "./relative_zoom_handler";
 const PTZModule: Module = {
 	name: "PTZ",
 	basePath: "/ptz",
+	authorized: true,
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const ptzModule = new Hono<{ Variables: constants.Variables }>();
 

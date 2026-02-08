@@ -14,30 +14,38 @@ interface ServiceConfig {
 
 class Server {
 	// public
-	readonly app: Hono<{ Variables: constants.Variables }>;
+	readonly authorizedRoutes = new Hono<{
+		Variables: constants.Variables;
+	}>();
+	readonly unauthorizedRoutes = new Hono<{
+		Variables: constants.Variables;
+	}>();
 
 	// private
+	#app = new Hono<{
+		Variables: constants.Variables;
+	}>();
 	#sharedKey!: string;
 	#serviceConfig!: ServiceConfig;
 	#modules: { [key: string]: Module } = {};
 
 	constructor() {
-		this.app = new Hono<{
-			Variables: constants.Variables;
-		}>();
-
 		this.#sharedKey = process.env[constants.sharedKeyKey] ?? "";
 		if (!this.#sharedKey) {
 			throw new Error("sharedKey not found in environment");
 		}
 
-		this.app.use(AuthorizationMiddleware(this.#sharedKey));
+		this.authorizedRoutes.use(AuthorizationMiddleware(this.#sharedKey));
 	}
 
 	registerModule(module: Module) {
 		if (this.#serviceConfig.moduleMap[module.name]) {
 			this.#modules[module.name] = module;
-			this.app.route(module.basePath, module.Initialize({}));
+			if (module.authorized) {
+				this.authorizedRoutes.route(module.basePath, module.Initialize({}));
+			} else {
+				this.unauthorizedRoutes.route(module.basePath, module.Initialize({}));
+			}
 		}
 	}
 
@@ -64,13 +72,16 @@ class Server {
 	}
 
 	async startServer() {
+		this.#app.route("/", this.unauthorizedRoutes);
+		this.#app.route("/", this.authorizedRoutes);
+
 		managers.WebSocketManager.setupWebsocket(
 			this.#serviceConfig.websocketPort,
 			this.#sharedKey,
 		);
 		serve(
 			{
-				fetch: this.app.fetch,
+				fetch: this.#app.fetch,
 				port: this.#serviceConfig.serverPort,
 			},
 			(info) => {

@@ -11,6 +11,7 @@ import GetScreenshotHandler from "./get_screenshot_handler";
 const InfoModule: Module = {
 	name: "Info",
 	basePath: "/info",
+	authorized: true,
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const infoModule = new Hono<{ Variables: constants.Variables }>();
 

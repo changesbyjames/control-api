@@ -11,6 +11,7 @@ import IrHandler from "./ir_handler";
 const DayNightModule: Module = {
 	name: "DayNight",
 	basePath: "/ir",
+	authorized: true,
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const dayNightModule = new Hono<{ Variables: constants.Variables }>();
 

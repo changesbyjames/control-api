@@ -15,6 +15,7 @@ import SetIntParameterHandler from "./int_parameter_handler";
 const SettingsModule: Module = {
 	name: "Settings",
 	basePath: "/settings",
+	authorized: true,
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const settingsModule = new Hono<{ Variables: constants.Variables }>();
 

@@ -19,6 +19,7 @@ import CIrisHandler from "./continuous_iris_handler";
 const ImagingModule: Module = {
 	name: "Imaging",
 	basePath: "/imaging",
+	authorized: true,
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const imagingModule = new Hono<{ Variables: constants.Variables }>();
 
