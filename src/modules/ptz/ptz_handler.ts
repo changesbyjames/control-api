@@ -8,6 +8,7 @@ import { type Handler } from "@/modules/module";
 import { APIErrorResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver, validator } from "hono-openapi";
 
 const ptzAdapter = z
 	.object({
@@ -27,62 +28,71 @@ const ptzAdapter = z
 		},
 	);
 
+const validators = [
+	validator("json", ptzAdapter),
+	validator("header", z.object({ "X-Camera-Name": z.string() })),
+	describeRoute({
+		description: "Make requests to change the pan, zoom and tilt of a camera",
+		responses: {
+			200: {
+				description: "Successfully submitted to the camera",
+				content: {
+					"text/plain": {
+						schema: resolver(z.string()),
+					},
+				},
+			},
+		},
+	}),
+] as const;
+
 const PTZHandler: Handler = {
-	adapter: ptzAdapter,
 	handle: () => {
-		return createFactory<constants.Env>().createHandlers(async (ctx) => {
-			let ptz;
-			try {
-				ptz = ptzAdapter.parse(await ctx.req.json());
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_REQUEST,
-					ErrorCode.InvalidRequestBodyCode,
-					error,
-				);
-			}
+		return createFactory<constants.Env>().createHandlers(
+			...validators,
+			async (ctx) => {
+				const ptz = ctx.req.valid("json");
+				let camera = ctx.get(constants.targetCameraKey);
+				if (!camera) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.InvalidContextCode,
+						errors.ErrCameraNotSet,
+					);
+				}
 
-			let camera = ctx.get(constants.targetCameraKey);
-			if (!camera) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.InvalidContextCode,
-					errors.ErrCameraNotSet,
-				);
-			}
+				let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+					...(ptz.pan != undefined && { pan: ptz.pan }),
+					...(ptz.tilt != undefined && { tilt: ptz.tilt }),
+					...(ptz.zoom != undefined && { zoom: ptz.zoom }),
+					...(ptz.focus != undefined && { focus: ptz.focus }),
+				});
 
-			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
-				...(ptz.pan != undefined && { pan: ptz.pan }),
-				...(ptz.tilt != undefined && { tilt: ptz.tilt }),
-				...(ptz.zoom != undefined && { zoom: ptz.zoom }),
-				...(ptz.focus != undefined && { focus: ptz.focus }),
-			});
+				let response;
+				try {
+					response = await VAPIXManager.makeAPICall(camera.client, url);
+				} catch (error) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrUnableToCallVAPIX(error),
+					);
+				}
 
-			let response;
-			try {
-				response = await VAPIXManager.makeAPICall(camera.client, url);
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrUnableToCallVAPIX(error),
-				);
-			}
+				if (!response.ok) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_BAD_GATEWAY,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrVAPIXCallFailed(await response.text()),
+					);
+				}
 
-			if (!response.ok) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_GATEWAY,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrVAPIXCallFailed(await response.text()),
-				);
-			}
-
-			return ctx.text(await response.text());
-		});
+				return ctx.text(await response.text());
+			},
+		);
 	},
 };
 

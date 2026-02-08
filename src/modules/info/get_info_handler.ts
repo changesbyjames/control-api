@@ -11,27 +11,27 @@ import * as errors from "@/errors/errors";
 import { z } from "zod";
 import { describeRoute, resolver, validator } from "hono-openapi";
 
-const description = describeRoute({
-	description: "Say hello to the user",
-	responses: {
-		200: {
-			description: "Successful response",
-			content: {
-				"application/json": {
-					schema: resolver(z.object({ message: z.string() })),
+const validators = [
+	describeRoute({
+		description: "Get information about a specific camera",
+		responses: {
+			200: {
+				description: "Information about a camera",
+				content: {
+					"application/json": {
+						schema: resolver(z.record(z.string(), z.number())),
+					},
 				},
 			},
 		},
-	},
-});
-
-const adapter = validator("json", z.object({ name: z.string() }));
+	}),
+	validator("header", z.object({ "X-Camera-Name": z.string() })),
+] as const;
 
 const GetInfoHandler: Handler = {
 	handle: () => {
 		return createFactory<constants.Env>().createHandlers(
-			description,
-			adapter,
+			...validators,
 			async (ctx) => {
 				let camera = ctx.get(constants.targetCameraKey);
 				if (!camera) {

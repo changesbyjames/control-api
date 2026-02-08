@@ -21,7 +21,6 @@ export interface Module {
 }
 
 export interface Handler {
-	adapter?: ZodObject;
 	handle: (...props: any) => [HonoHandler, ...HonoHandler[]];
 }
 
