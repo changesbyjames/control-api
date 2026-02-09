@@ -11,8 +11,8 @@ import * as errors from "@/errors/errors";
 import { z } from "zod";
 import { describeRoute, resolver, validator } from "hono-openapi";
 
-const validators = [
-	describeRoute({
+const GetInfoHandler: Handler = {
+	openapi: describeRoute({
 		description: "Get information about a specific camera",
 		responses: {
 			200: {
@@ -25,13 +25,9 @@ const validators = [
 			},
 		},
 	}),
-	validator("header", z.object({ "X-Camera-Name": z.string() })),
-] as const;
-
-const GetInfoHandler: Handler = {
 	handle: () => {
 		return createFactory<constants.Env>().createHandlers(
-			...validators,
+			validator("header", z.object({ "X-Camera-Name": z.string() })),
 			async (ctx) => {
 				let camera = ctx.get(constants.targetCameraKey);
 				if (!camera) {

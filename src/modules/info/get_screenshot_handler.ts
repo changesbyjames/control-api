@@ -7,8 +7,27 @@ import { type Handler } from "@/modules/module";
 import { APIErrorResponse, formatPosition } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver } from "hono-openapi";
+import z from "zod";
 
 const GetScreenshotHandler: Handler = {
+	openapi: describeRoute({
+		description: "Get the speed of the camera",
+		responses: {
+			200: {
+				description: "Speed of the camera",
+				content: {
+					"application/json": {
+						schema: resolver(
+							z.object({
+								speed: z.number().min(0).max(100),
+							}),
+						),
+					},
+				},
+			},
+		},
+	}),
 	handle: () => {
 		return createFactory<constants.Env>().createHandlers(async (ctx) => {
 			let camera = ctx.get(constants.targetCameraKey);

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import type { Module } from "@/modules/module";
+import { serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import GetInfoHandler from "./get_info_handler";
@@ -14,27 +14,27 @@ const InfoModule: Module = {
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const infoModule = new Hono<{ Variables: constants.Variables }>();
 
-		infoModule.use(CameraMiddleware);
+		infoModule.use(...CameraMiddleware);
 
 		infoModule.on(
 			"GET",
 			"/position",
 			CapabilitiesMiddleware("PTZ"),
-			...GetInfoHandler.handle(),
+			...serveHandler(GetInfoHandler),
 		);
 
 		infoModule.on(
 			"GET",
 			"/speed",
 			CapabilitiesMiddleware("PTZ"),
-			...GetSpeedHandler.handle(),
+			...serveHandler(GetSpeedHandler),
 		);
 
 		infoModule.on(
 			"GET",
 			"/screenshot",
 			CapabilitiesMiddleware("Screenshots"),
-			...GetScreenshotHandler.handle(),
+			...serveHandler(GetScreenshotHandler),
 		);
 
 		return infoModule;
