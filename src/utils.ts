@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import { type StatusCode } from "hono/utils/http-status";
+import * as z from "zod";
 
 import * as constants from "@/constants";
 
@@ -7,6 +8,10 @@ interface APIError {
 	code: number;
 	details: string;
 }
+
+export const PositionValueSchema = z.union([z.number(), z.string()]);
+export const PositionMapSchema = z.record(z.string(), PositionValueSchema);
+export type PositionMap = z.infer<typeof PositionMapSchema>;
 
 export function APIErrorResponse(
 	ctx: Context<constants.Env>,
@@ -31,17 +36,21 @@ export function APIErrorResponse(
 	return ctx.json(newAPIError);
 }
 
-export function formatPosition(position: string): Object {
-	let o: any = {};
-	position.split("\r\n").forEach((p) => {
-		let j = p.split("=");
-		if (j[0] != "") {
-			let v = j[1].trim();
-			o[j[0]] = !Number.isNaN(Number(v)) ? Number(v) : v;
+export function formatPosition(position: string): PositionMap {
+	const parsed: PositionMap = {};
+
+	position.split("\r\n").forEach((entry) => {
+		const [key, ...rest] = entry.split("=");
+		if (key === "" || rest.length === 0) {
+			return;
 		}
+
+		const value = rest.join("=").trim();
+		const maybeNumber = Number(value);
+		parsed[key] = Number.isNaN(maybeNumber) ? value : maybeNumber;
 	});
 
-	return o;
+	return PositionMapSchema.parse(parsed);
 }
 
 export function mapTopicToFriendlyName(topic: string): string | undefined {

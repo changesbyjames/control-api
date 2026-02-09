@@ -8,6 +8,7 @@ import { type Handler } from "@/modules/module";
 import { APIErrorResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver, validator } from "hono-openapi";
 
 // prettier-ignore
 function newParameterAdapter(max: number) {
@@ -17,32 +18,40 @@ function newParameterAdapter(max: number) {
 }
 
 const SetIntParameterHandler: Handler = {
+	openapi: describeRoute({
+		description: "Set an integer camera parameter",
+		responses: {
+			200: {
+				description: "Parameter state",
+				content: {
+					"application/json": {
+						schema: resolver(z.record(z.string(), z.any())),
+					},
+				},
+			},
+		},
+	}),
 	handle: (parameter: string, max: number) => {
-		return createFactory<constants.Env>().createHandlers(async (ctx) => {
-			let value;
-			try {
-				value = newParameterAdapter(max).parse(await ctx.req.json());
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_REQUEST,
-					ErrorCode.InvalidRequestBodyCode,
-					error,
-				);
-			}
+		const valueAdapter = newParameterAdapter(max);
 
-			let camera = ctx.get(constants.targetCameraKey);
-			if (!camera) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.InvalidContextCode,
-					errors.ErrCameraNotSet,
-				);
-			}
+		return createFactory<constants.Env>().createHandlers(
+			validator("json", valueAdapter),
+			async (ctx) => {
+				const value = ctx.req.valid("json");
 
-			return VAPIXManager.SetParameter(ctx, camera, parameter, value.value);
-		});
+				let camera = ctx.get(constants.targetCameraKey);
+				if (!camera) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.InvalidContextCode,
+						errors.ErrCameraNotSet,
+					);
+				}
+
+				return VAPIXManager.SetParameter(ctx, camera, parameter, value.value);
+			},
+		);
 	},
 };
 

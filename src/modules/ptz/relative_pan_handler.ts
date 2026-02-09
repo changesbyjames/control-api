@@ -8,64 +8,70 @@ import { type Handler } from "@/modules/module";
 import { APIErrorResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver, validator } from "hono-openapi";
 
 const rpanAdapter = z.object({
 	degrees: z.number().min(-360.0).and(z.number().max(360.0)),
 });
 
 const RPanHandler: Handler = {
-	adapter: rpanAdapter,
+	openapi: describeRoute({
+		description: "Set relative pan movement of the camera",
+		responses: {
+			200: {
+				description: "Successfully submitted to the camera",
+				content: {
+					"text/plain": {
+						schema: resolver(z.string()),
+					},
+				},
+			},
+		},
+	}),
 	handle: () => {
-		return createFactory<constants.Env>().createHandlers(async (ctx) => {
-			let rpan;
-			try {
-				rpan = rpanAdapter.parse(await ctx.req.json());
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_REQUEST,
-					ErrorCode.InvalidRequestBodyCode,
-					error,
-				);
-			}
+		return createFactory<constants.Env>().createHandlers(
+			validator("json", rpanAdapter),
+			async (ctx) => {
+				const rpan = ctx.req.valid("json");
 
-			let camera = ctx.get(constants.targetCameraKey);
-			if (!camera) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.InvalidContextCode,
-					errors.ErrCameraNotSet,
-				);
-			}
+				let camera = ctx.get(constants.targetCameraKey);
+				if (!camera) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.InvalidContextCode,
+						errors.ErrCameraNotSet,
+					);
+				}
 
-			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
-				rpan: rpan.degrees,
-			});
+				let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+					rpan: rpan.degrees,
+				});
 
-			let response;
-			try {
-				response = await VAPIXManager.makeAPICall(camera.client, url);
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrUnableToCallVAPIX(error),
-				);
-			}
+				let response;
+				try {
+					response = await VAPIXManager.makeAPICall(camera.client, url);
+				} catch (error) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrUnableToCallVAPIX(error),
+					);
+				}
 
-			if (!response.ok) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_GATEWAY,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrVAPIXCallFailed(await response.text()),
-				);
-			}
+				if (!response.ok) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_BAD_GATEWAY,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrVAPIXCallFailed(await response.text()),
+					);
+				}
 
-			return ctx.text(await response.text());
-		});
+				return ctx.text(await response.text());
+			},
+		);
 	},
 };
 

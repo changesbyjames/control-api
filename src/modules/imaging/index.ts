@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import type { Module } from "@/modules/module";
+import { serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import FocusHandler from "./focus_handler";
@@ -22,28 +22,28 @@ const ImagingModule: Module = {
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const imagingModule = new Hono<{ Variables: constants.Variables }>();
 
-		imagingModule.use(CameraMiddleware);
+		imagingModule.use(...CameraMiddleware);
 
 		// Absolute imaging
 		imagingModule.on(
 			"POST",
 			"/focus",
 			CapabilitiesMiddleware("Focus"),
-			...FocusHandler.handle(),
+			...serveHandler(FocusHandler),
 		);
 
 		imagingModule.on(
 			"POST",
 			"/brightness",
 			CapabilitiesMiddleware("Brightness"),
-			...BrightnessHandler.handle(),
+			...serveHandler(BrightnessHandler),
 		);
 
 		imagingModule.on(
 			"POST",
 			"/iris",
 			CapabilitiesMiddleware("Iris"),
-			...IrisHandler.handle(),
+			...serveHandler(IrisHandler),
 		);
 
 		// Relative imaging
@@ -51,21 +51,21 @@ const ImagingModule: Module = {
 			"POST",
 			"/rfocus",
 			CapabilitiesMiddleware("Focus"),
-			...RFocusHandler.handle(),
+			...serveHandler(RFocusHandler),
 		);
 
 		imagingModule.on(
 			"POST",
 			"/rbrightness",
 			CapabilitiesMiddleware("Brightness"),
-			...RBrightnessHandler.handle(),
+			...serveHandler(RBrightnessHandler),
 		);
 
 		imagingModule.on(
 			"POST",
 			"/riris",
 			CapabilitiesMiddleware("Iris"),
-			...IRrisHandler.handle(),
+			...serveHandler(IRrisHandler),
 		);
 
 		// Auto imaging
@@ -73,14 +73,14 @@ const ImagingModule: Module = {
 			"POST",
 			"/autofocus",
 			CapabilitiesMiddleware("Focus"),
-			...AutofocusHandler.handle(),
+			...serveHandler(AutofocusHandler),
 		);
 
 		imagingModule.on(
 			"POST",
 			"/autoiris",
 			CapabilitiesMiddleware("Iris"),
-			...AutoirisHandler.handle(),
+			...serveHandler(AutoirisHandler),
 		);
 
 		// Continuous imaging
@@ -88,21 +88,21 @@ const ImagingModule: Module = {
 			"POST",
 			"/cfocus",
 			CapabilitiesMiddleware("Focus"),
-			...CFocusHandler.handle(),
+			...serveHandler(CFocusHandler),
 		);
 
 		imagingModule.on(
 			"POST",
 			"/cbrightness",
 			CapabilitiesMiddleware("ContinuousBrightness"),
-			...CBrightnessHandler.handle(),
+			...serveHandler(CBrightnessHandler),
 		);
 
 		imagingModule.on(
 			"POST",
 			"/ciris",
 			CapabilitiesMiddleware("ContinuousIris"),
-			...CIrisHandler.handle(),
+			...serveHandler(CIrisHandler),
 		);
 
 		return imagingModule;

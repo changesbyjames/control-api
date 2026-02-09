@@ -28,10 +28,8 @@ const ptzAdapter = z
 		},
 	);
 
-const validators = [
-	validator("json", ptzAdapter),
-	validator("header", z.object({ "X-Camera-Name": z.string() })),
-	describeRoute({
+const PTZHandler: Handler = {
+	openapi: describeRoute({
 		description: "Make requests to change the pan, zoom and tilt of a camera",
 		responses: {
 			200: {
@@ -44,12 +42,9 @@ const validators = [
 			},
 		},
 	}),
-] as const;
-
-const PTZHandler: Handler = {
 	handle: () => {
 		return createFactory<constants.Env>().createHandlers(
-			...validators,
+			validator("json", ptzAdapter),
 			async (ctx) => {
 				const ptz = ctx.req.valid("json");
 				let camera = ctx.get(constants.targetCameraKey);

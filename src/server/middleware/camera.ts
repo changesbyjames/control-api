@@ -6,7 +6,7 @@ import * as constants from "@/constants";
 import { CameraManager } from "@/managers";
 import { APIErrorResponse } from "@/utils";
 import { validator } from "hono-openapi";
-import { z } from "zod";
+import * as z from "zod";
 
 const CameraMiddleware = [
 	createMiddleware<constants.Env>(

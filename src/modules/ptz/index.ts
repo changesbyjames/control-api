@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import type { Module } from "@/modules/module";
+import { serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import PTZHandler from "./ptz_handler";
@@ -22,90 +22,90 @@ const PTZModule: Module = {
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const ptzModule = new Hono<{ Variables: constants.Variables }>();
 
-		ptzModule.use(CameraMiddleware);
+		ptzModule.use(...CameraMiddleware);
 
 		ptzModule.on(
 			"POST",
 			"/",
 			CapabilitiesMiddleware("PTZ"),
-			...PTZHandler.handle(),
+			...serveHandler(PTZHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/load",
 			CapabilitiesMiddleware("PTZ"),
-			...PTZHandler.handle(),
+			...serveHandler(PTZHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/move",
 			CapabilitiesMiddleware("PTZ"),
-			...MoveHandler.handle(),
+			...serveHandler(MoveHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/pan",
 			CapabilitiesMiddleware("PTZ"),
-			...PanHandler.handle(),
+			...serveHandler(PanHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/tilt",
 			CapabilitiesMiddleware("PTZ"),
-			...TiltHandler.handle(),
+			...serveHandler(TiltHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/zoom",
 			CapabilitiesMiddleware("PTZ"),
-			...ZoomHandler.handle(),
+			...serveHandler(ZoomHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/areazoom",
 			CapabilitiesMiddleware("PTZ"),
-			...AreazoomHandler.handle(),
+			...serveHandler(AreazoomHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/spin",
 			CapabilitiesMiddleware("PTZ"),
-			...SpinHandler.handle(),
+			...serveHandler(SpinHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"rptz",
 			CapabilitiesMiddleware("PTZ"),
-			...RPTZHandler.handle(),
+			...serveHandler(RPTZHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/rpan",
 			CapabilitiesMiddleware("PTZ"),
-			...RPanHandler.handle(),
+			...serveHandler(RPanHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/rtilt",
 			CapabilitiesMiddleware("PTZ"),
-			...RTiltHandler.handle(),
+			...serveHandler(RTiltHandler),
 		);
 
 		ptzModule.on(
 			"POST",
 			"/rzoom",
 			CapabilitiesMiddleware("PTZ"),
-			...RZoomHandler.handle(),
+			...serveHandler(RZoomHandler),
 		);
 
 		return ptzModule;

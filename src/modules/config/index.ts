@@ -11,9 +11,9 @@ const ConfigModule: Module = {
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const configModule = new Hono<{ Variables: constants.Variables }>();
 
-		configModule.on(
-			"GET",
+		configModule.get(
 			"/capabilities/:camera",
+			GetCapabilitiesHandler.openapi,
 			...GetCapabilitiesHandler.handle(),
 		);
 

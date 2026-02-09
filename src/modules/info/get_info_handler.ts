@@ -4,11 +4,11 @@ import { constants as http } from "http2";
 import * as constants from "@/constants";
 import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
-import { APIErrorResponse, formatPosition } from "@/utils";
+import { APIErrorResponse, formatPosition, PositionMapSchema } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
 
-import { z } from "zod";
+import * as z from "zod";
 import { describeRoute, resolver, validator } from "hono-openapi";
 
 const GetInfoHandler: Handler = {
@@ -19,7 +19,7 @@ const GetInfoHandler: Handler = {
 				description: "Information about a camera",
 				content: {
 					"application/json": {
-						schema: resolver(z.record(z.string(), z.number())),
+						schema: resolver(PositionMapSchema),
 					},
 				},
 			},

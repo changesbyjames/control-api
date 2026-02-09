@@ -3,7 +3,6 @@ import {
 	type Handler as HonoHandler,
 	type MiddlewareHandler,
 } from "hono";
-import type { ZodObject } from "zod";
 
 import * as constants from "@/constants";
 
@@ -29,8 +28,11 @@ export interface Handler {
 	handle: (...props: any) => [HonoHandler, ...HonoHandler[]];
 }
 
-export const serveHandler = (handler: Handler): HonoHandler[] => {
-	return [handler.openapi, ...handler.handle()];
+export const serveHandler = (
+	handler: Handler,
+	...props: any
+): HonoHandler[] => {
+	return [handler.openapi, ...handler.handle(...props)];
 };
 
 // Register modules to be loaded here

@@ -4,11 +4,10 @@ import { constants as http } from "http2";
 import * as constants from "@/constants";
 import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
-import { APIErrorResponse, formatPosition } from "@/utils";
+import { APIErrorResponse, formatPosition, PositionMapSchema } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
 import { describeRoute, resolver } from "hono-openapi";
-import z from "zod";
 
 const GetSpeedHandler: Handler = {
 	openapi: describeRoute({
@@ -18,11 +17,7 @@ const GetSpeedHandler: Handler = {
 				description: "Speed of the camera",
 				content: {
 					"application/json": {
-						schema: resolver(
-							z.object({
-								speed: z.number().min(0).max(100),
-							}),
-						),
+						schema: resolver(PositionMapSchema),
 					},
 				},
 			},
