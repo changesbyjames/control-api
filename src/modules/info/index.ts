@@ -11,34 +11,41 @@ import GetScreenshotHandler from "./get_screenshot_handler";
 const InfoModule: Module = {
 	name: "Info",
 	basePath: "/info",
-	authorized: true,
-	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const infoModule = new Hono<{ Variables: constants.Variables }>();
+	Initialize: (
+		config,
+	): [
+		Hono<{ Variables: constants.Variables }>,
+		Hono<{ Variables: constants.Variables }>,
+	] => {
+		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoute = new Hono<{
+			Variables: constants.Variables;
+		}>();
 
-		infoModule.use(CameraMiddleware);
+		authenticatedRoute.use(CameraMiddleware);
 
-		infoModule.on(
+		authenticatedRoute.on(
 			"GET",
 			"/position",
 			CapabilitiesMiddleware("PTZ"),
 			...GetInfoHandler.handle(),
 		);
 
-		infoModule.on(
+		authenticatedRoute.on(
 			"GET",
 			"/speed",
 			CapabilitiesMiddleware("PTZ"),
 			...GetSpeedHandler.handle(),
 		);
 
-		infoModule.on(
+		authenticatedRoute.on(
 			"GET",
 			"/screenshot",
 			CapabilitiesMiddleware("Screenshots"),
 			...GetScreenshotHandler.handle(),
 		);
 
-		return infoModule;
+		return [authenticatedRoute, unauthenticatedRoute];
 	},
 	Shutdown: (): void => {},
 };

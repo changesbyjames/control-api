@@ -14,10 +14,12 @@ import ConfigModule from "./config";
 export interface Module {
 	name: string;
 	basePath: string;
-	authorized: boolean;
 	Initialize: (config: {
 		[index: string]: any;
-	}) => Hono<{ Variables: constants.Variables }>;
+	}) => [
+		Hono<{ Variables: constants.Variables }>,
+		Hono<{ Variables: constants.Variables }>,
+	];
 	Shutdown: () => void;
 }
 

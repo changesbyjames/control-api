@@ -19,28 +19,35 @@ import CIrisHandler from "./continuous_iris_handler";
 const ImagingModule: Module = {
 	name: "Imaging",
 	basePath: "/imaging",
-	authorized: true,
-	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const imagingModule = new Hono<{ Variables: constants.Variables }>();
+	Initialize: (
+		config,
+	): [
+		Hono<{ Variables: constants.Variables }>,
+		Hono<{ Variables: constants.Variables }>,
+	] => {
+		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoute = new Hono<{
+			Variables: constants.Variables;
+		}>();
 
-		imagingModule.use(CameraMiddleware);
+		authenticatedRoute.use(CameraMiddleware);
 
 		// Absolute imaging
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/focus",
 			CapabilitiesMiddleware("Focus"),
 			...FocusHandler.handle(),
 		);
 
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/brightness",
 			CapabilitiesMiddleware("Brightness"),
 			...BrightnessHandler.handle(),
 		);
 
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/iris",
 			CapabilitiesMiddleware("Iris"),
@@ -48,21 +55,21 @@ const ImagingModule: Module = {
 		);
 
 		// Relative imaging
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/rfocus",
 			CapabilitiesMiddleware("Focus"),
 			...RFocusHandler.handle(),
 		);
 
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/rbrightness",
 			CapabilitiesMiddleware("Brightness"),
 			...RBrightnessHandler.handle(),
 		);
 
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/riris",
 			CapabilitiesMiddleware("Iris"),
@@ -70,14 +77,14 @@ const ImagingModule: Module = {
 		);
 
 		// Auto imaging
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/autofocus",
 			CapabilitiesMiddleware("Focus"),
 			...AutofocusHandler.handle(),
 		);
 
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/autoiris",
 			CapabilitiesMiddleware("Iris"),
@@ -85,28 +92,28 @@ const ImagingModule: Module = {
 		);
 
 		// Continuous imaging
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/cfocus",
 			CapabilitiesMiddleware("Focus"),
 			...CFocusHandler.handle(),
 		);
 
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/cbrightness",
 			CapabilitiesMiddleware("ContinuousBrightness"),
 			...CBrightnessHandler.handle(),
 		);
 
-		imagingModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/ciris",
 			CapabilitiesMiddleware("ContinuousIris"),
 			...CIrisHandler.handle(),
 		);
 
-		return imagingModule;
+		return [authenticatedRoute, unauthenticatedRoute];
 	},
 	Shutdown: (): void => {},
 };

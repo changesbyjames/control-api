@@ -11,34 +11,41 @@ import IrHandler from "./ir_handler";
 const DayNightModule: Module = {
 	name: "DayNight",
 	basePath: "/ir",
-	authorized: true,
-	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const dayNightModule = new Hono<{ Variables: constants.Variables }>();
+	Initialize: (
+		config,
+	): [
+		Hono<{ Variables: constants.Variables }>,
+		Hono<{ Variables: constants.Variables }>,
+	] => {
+		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoute = new Hono<{
+			Variables: constants.Variables;
+		}>();
 
-		dayNightModule.use(CameraMiddleware);
+		authenticatedRoute.use(CameraMiddleware);
 
-		dayNightModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"",
 			CapabilitiesMiddleware("IrCutFilter", "IrLight"),
 			...IrHandler.handle(),
 		);
 
-		dayNightModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/filter",
 			CapabilitiesMiddleware("IrCutFilter"),
 			...IrFilterHandler.handle(),
 		);
 
-		dayNightModule.on(
+		authenticatedRoute.on(
 			"POST",
 			"/light",
 			CapabilitiesMiddleware("IrLight"),
 			...IrLightHandler.handle(),
 		);
 
-		return dayNightModule;
+		return [authenticatedRoute, unauthenticatedRoute];
 	},
 	Shutdown: (): void => {},
 };

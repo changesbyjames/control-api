@@ -8,17 +8,24 @@ import GetCapabilitiesHandler from "./get_capabilities_handler";
 const ConfigModule: Module = {
 	name: "Config",
 	basePath: "/config",
-	authorized: false,
-	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const configModule = new Hono<{ Variables: constants.Variables }>();
+	Initialize: (
+		config,
+	): [
+		Hono<{ Variables: constants.Variables }>,
+		Hono<{ Variables: constants.Variables }>,
+	] => {
+		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoute = new Hono<{
+			Variables: constants.Variables;
+		}>();
 
-		configModule.on(
+		unauthenticatedRoute.on(
 			"GET",
 			"/capabilities/:camera",
 			...GetCapabilitiesHandler.handle(),
 		);
 
-		return configModule;
+		return [authenticatedRoute, unauthenticatedRoute];
 	},
 	Shutdown: (): void => {},
 };
