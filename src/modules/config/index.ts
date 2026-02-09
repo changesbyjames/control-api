@@ -14,18 +14,18 @@ const ConfigModule: Module = {
 		Hono<{ Variables: constants.Variables }>,
 		Hono<{ Variables: constants.Variables }>,
 	] => {
-		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoute = new Hono<{
+		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoutes = new Hono<{
 			Variables: constants.Variables;
 		}>();
 
-		unauthenticatedRoute.on(
+		unauthenticatedRoutes.on(
 			"GET",
 			"/capabilities/:camera",
 			...GetCapabilitiesHandler.handle(),
 		);
 
-		return [authenticatedRoute, unauthenticatedRoute];
+		return [authenticatedRoutes, unauthenticatedRoutes];
 	},
 	Shutdown: (): void => {},
 };

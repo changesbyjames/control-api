@@ -25,29 +25,29 @@ const ImagingModule: Module = {
 		Hono<{ Variables: constants.Variables }>,
 		Hono<{ Variables: constants.Variables }>,
 	] => {
-		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoute = new Hono<{
+		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoutes = new Hono<{
 			Variables: constants.Variables;
 		}>();
 
-		authenticatedRoute.use(CameraMiddleware);
+		authenticatedRoutes.use(CameraMiddleware);
 
 		// Absolute imaging
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/focus",
 			CapabilitiesMiddleware("Focus"),
 			...FocusHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/brightness",
 			CapabilitiesMiddleware("Brightness"),
 			...BrightnessHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/iris",
 			CapabilitiesMiddleware("Iris"),
@@ -55,21 +55,21 @@ const ImagingModule: Module = {
 		);
 
 		// Relative imaging
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/rfocus",
 			CapabilitiesMiddleware("Focus"),
 			...RFocusHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/rbrightness",
 			CapabilitiesMiddleware("Brightness"),
 			...RBrightnessHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/riris",
 			CapabilitiesMiddleware("Iris"),
@@ -77,14 +77,14 @@ const ImagingModule: Module = {
 		);
 
 		// Auto imaging
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/autofocus",
 			CapabilitiesMiddleware("Focus"),
 			...AutofocusHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/autoiris",
 			CapabilitiesMiddleware("Iris"),
@@ -92,28 +92,28 @@ const ImagingModule: Module = {
 		);
 
 		// Continuous imaging
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/cfocus",
 			CapabilitiesMiddleware("Focus"),
 			...CFocusHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/cbrightness",
 			CapabilitiesMiddleware("ContinuousBrightness"),
 			...CBrightnessHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/ciris",
 			CapabilitiesMiddleware("ContinuousIris"),
 			...CIrisHandler.handle(),
 		);
 
-		return [authenticatedRoute, unauthenticatedRoute];
+		return [authenticatedRoutes, unauthenticatedRoutes];
 	},
 	Shutdown: (): void => {},
 };

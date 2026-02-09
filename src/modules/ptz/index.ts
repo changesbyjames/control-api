@@ -25,98 +25,98 @@ const PTZModule: Module = {
 		Hono<{ Variables: constants.Variables }>,
 		Hono<{ Variables: constants.Variables }>,
 	] => {
-		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoute = new Hono<{
+		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoutes = new Hono<{
 			Variables: constants.Variables;
 		}>();
 
-		authenticatedRoute.use(CameraMiddleware);
+		authenticatedRoutes.use(CameraMiddleware);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/",
 			CapabilitiesMiddleware("PTZ"),
 			...PTZHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/load",
 			CapabilitiesMiddleware("PTZ"),
 			...PTZHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/move",
 			CapabilitiesMiddleware("PTZ"),
 			...MoveHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/pan",
 			CapabilitiesMiddleware("PTZ"),
 			...PanHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/tilt",
 			CapabilitiesMiddleware("PTZ"),
 			...TiltHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/zoom",
 			CapabilitiesMiddleware("PTZ"),
 			...ZoomHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/areazoom",
 			CapabilitiesMiddleware("PTZ"),
 			...AreazoomHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/spin",
 			CapabilitiesMiddleware("PTZ"),
 			...SpinHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"rptz",
 			CapabilitiesMiddleware("PTZ"),
 			...RPTZHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/rpan",
 			CapabilitiesMiddleware("PTZ"),
 			...RPanHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/rtilt",
 			CapabilitiesMiddleware("PTZ"),
 			...RTiltHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/rzoom",
 			CapabilitiesMiddleware("PTZ"),
 			...RZoomHandler.handle(),
 		);
 
-		return [authenticatedRoute, unauthenticatedRoute];
+		return [authenticatedRoutes, unauthenticatedRoutes];
 	},
 	Shutdown: (): void => {},
 };

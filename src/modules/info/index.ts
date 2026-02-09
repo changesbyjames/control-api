@@ -17,35 +17,35 @@ const InfoModule: Module = {
 		Hono<{ Variables: constants.Variables }>,
 		Hono<{ Variables: constants.Variables }>,
 	] => {
-		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoute = new Hono<{
+		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoutes = new Hono<{
 			Variables: constants.Variables;
 		}>();
 
-		authenticatedRoute.use(CameraMiddleware);
+		authenticatedRoutes.use(CameraMiddleware);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"GET",
 			"/position",
 			CapabilitiesMiddleware("PTZ"),
 			...GetInfoHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"GET",
 			"/speed",
 			CapabilitiesMiddleware("PTZ"),
 			...GetSpeedHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"GET",
 			"/screenshot",
 			CapabilitiesMiddleware("Screenshots"),
 			...GetScreenshotHandler.handle(),
 		);
 
-		return [authenticatedRoute, unauthenticatedRoute];
+		return [authenticatedRoutes, unauthenticatedRoutes];
 	},
 	Shutdown: (): void => {},
 };

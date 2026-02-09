@@ -17,35 +17,35 @@ const DayNightModule: Module = {
 		Hono<{ Variables: constants.Variables }>,
 		Hono<{ Variables: constants.Variables }>,
 	] => {
-		const authenticatedRoute = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoute = new Hono<{
+		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
+		const unauthenticatedRoutes = new Hono<{
 			Variables: constants.Variables;
 		}>();
 
-		authenticatedRoute.use(CameraMiddleware);
+		authenticatedRoutes.use(CameraMiddleware);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"",
 			CapabilitiesMiddleware("IrCutFilter", "IrLight"),
 			...IrHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/filter",
 			CapabilitiesMiddleware("IrCutFilter"),
 			...IrFilterHandler.handle(),
 		);
 
-		authenticatedRoute.on(
+		authenticatedRoutes.on(
 			"POST",
 			"/light",
 			CapabilitiesMiddleware("IrLight"),
 			...IrLightHandler.handle(),
 		);
 
-		return [authenticatedRoute, unauthenticatedRoute];
+		return [authenticatedRoutes, unauthenticatedRoutes];
 	},
 	Shutdown: (): void => {},
 };
