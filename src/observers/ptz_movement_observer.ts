@@ -1,6 +1,6 @@
 import type { Camera, Observer, Message } from "@/models";
 import { WebSocketManager, VAPIXManager } from "@/managers";
-import { formatPosition } from "@/utils";
+import { formatQueryResponse } from "@/utils";
 
 const PTZObserver: Observer = {
 	name: "ptz movement",
@@ -35,7 +35,7 @@ const PTZObserver: Observer = {
 			});
 
 			let response = await VAPIXManager.makeAPICall(camera.client, url);
-			info = formatPosition(await response.text()) as Record<string, any>;
+			info = formatQueryResponse(await response.text());
 
 			url = VAPIXManager.URLBuilder(camera.host, "param", {
 				action: "list",
@@ -44,10 +44,7 @@ const PTZObserver: Observer = {
 
 			response = await VAPIXManager.makeAPICall(camera.client, url);
 
-			const proportionalSpeed = formatPosition(await response.text()) as Record<
-				string,
-				any
-			>;
+			const proportionalSpeed = formatQueryResponse(await response.text());
 			info.proportional_speed = proportionalSpeed[param];
 			is_moving = true;
 		} else {
@@ -56,7 +53,7 @@ const PTZObserver: Observer = {
 			});
 
 			let response = await VAPIXManager.makeAPICall(camera.client, url);
-			info = formatPosition(await response.text()) as Record<string, unknown>;
+			info = formatQueryResponse(await response.text());
 
 			is_moving = false;
 		}

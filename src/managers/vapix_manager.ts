@@ -3,7 +3,7 @@ import type { Context } from "hono";
 
 import * as constants from "@/constants";
 import { constants as http } from "http2";
-import { APIErrorResponse, formatPosition } from "@/utils";
+import { APIErrorResponse, formatQueryResponse } from "@/utils";
 import type { Camera } from "@/models";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
@@ -78,7 +78,7 @@ class VAPIXManager {
 			);
 		}
 
-		let properties = formatPosition(await response.text());
+		let properties = formatQueryResponse(await response.text());
 		return ctx.json(properties);
 	}
 

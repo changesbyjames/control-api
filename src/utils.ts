@@ -31,7 +31,7 @@ export function APIErrorResponse(
 	return ctx.json(newAPIError);
 }
 
-export function formatPosition(position: string): Object {
+export function formatQueryResponse(position: string): Record<string, any> {
 	let o: any = {};
 	position.split("\r\n").forEach((p) => {
 		let j = p.split("=");

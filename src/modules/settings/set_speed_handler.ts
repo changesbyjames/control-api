@@ -5,7 +5,7 @@ import { constants as http } from "http2";
 import * as constants from "@/constants";
 import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
-import { APIErrorResponse, formatPosition } from "@/utils";
+import { APIErrorResponse, formatQueryResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
 
@@ -89,7 +89,7 @@ const SetSpeedHandler: Handler = {
 			}
 
 			let values = await response.text();
-			return ctx.json(formatPosition(values));
+			return ctx.json(formatQueryResponse(values));
 		});
 	},
 };
