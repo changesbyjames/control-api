@@ -7,7 +7,11 @@ import * as constants from "@/constants";
 import { APIErrorResponse } from "@/utils";
 import * as errors from "@/errors/errors";
 
-const AuthorizationMiddleware = (sharedKey: string) => {
+function createAuthenticationMiddleware() {
+	const sharedKey = process.env[constants.sharedKeyKey] ?? "";
+	if (!sharedKey) {
+		throw new Error("sharedKey not found in environment");
+	}
 	return createMiddleware<constants.Env>(async (ctx, next) => {
 		const header = ctx.req.header("authorization");
 		const [type, key] = header?.split(" ") ?? [];
@@ -28,6 +32,8 @@ const AuthorizationMiddleware = (sharedKey: string) => {
 		}
 		await next();
 	});
-};
+}
 
-export default AuthorizationMiddleware;
+const AuthenticationMiddleware = createAuthenticationMiddleware();
+
+export default AuthenticationMiddleware;

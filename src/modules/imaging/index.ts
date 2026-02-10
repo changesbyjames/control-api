@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import type { Module } from "@/modules/module";
+import { RegisterRoute, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import FocusHandler from "./focus_handler";
@@ -19,35 +19,30 @@ import CIrisHandler from "./continuous_iris_handler";
 const ImagingModule: Module = {
 	name: "Imaging",
 	basePath: "/imaging",
-	Initialize: (
-		config,
-	): [
-		Hono<{ Variables: constants.Variables }>,
-		Hono<{ Variables: constants.Variables }>,
-	] => {
-		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoutes = new Hono<{
-			Variables: constants.Variables;
-		}>();
+	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
+		const ImagingModule = new Hono<{ Variables: constants.Variables }>();
 
-		authenticatedRoutes.use(CameraMiddleware);
+		ImagingModule.use(CameraMiddleware);
 
 		// Absolute imaging
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/focus",
 			CapabilitiesMiddleware("Focus"),
 			...FocusHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/brightness",
 			CapabilitiesMiddleware("Brightness"),
 			...BrightnessHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/iris",
 			CapabilitiesMiddleware("Iris"),
@@ -55,21 +50,24 @@ const ImagingModule: Module = {
 		);
 
 		// Relative imaging
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/rfocus",
 			CapabilitiesMiddleware("Focus"),
 			...RFocusHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/rbrightness",
 			CapabilitiesMiddleware("Brightness"),
 			...RBrightnessHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/riris",
 			CapabilitiesMiddleware("Iris"),
@@ -77,14 +75,16 @@ const ImagingModule: Module = {
 		);
 
 		// Auto imaging
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/autofocus",
 			CapabilitiesMiddleware("Focus"),
 			...AutofocusHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/autoiris",
 			CapabilitiesMiddleware("Iris"),
@@ -92,28 +92,31 @@ const ImagingModule: Module = {
 		);
 
 		// Continuous imaging
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/cfocus",
 			CapabilitiesMiddleware("Focus"),
 			...CFocusHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/cbrightness",
 			CapabilitiesMiddleware("ContinuousBrightness"),
 			...CBrightnessHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			ImagingModule,
 			"POST",
 			"/ciris",
 			CapabilitiesMiddleware("ContinuousIris"),
 			...CIrisHandler.handle(),
 		);
 
-		return [authenticatedRoutes, unauthenticatedRoutes];
+		return ImagingModule;
 	},
 	Shutdown: (): void => {},
 };

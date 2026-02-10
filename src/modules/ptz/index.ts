@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import type { Module } from "@/modules/module";
+import { RegisterRoute, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import PTZHandler from "./ptz_handler";
@@ -19,104 +19,116 @@ import RZoomHandler from "./relative_zoom_handler";
 const PTZModule: Module = {
 	name: "PTZ",
 	basePath: "/ptz",
-	Initialize: (
-		config,
-	): [
-		Hono<{ Variables: constants.Variables }>,
-		Hono<{ Variables: constants.Variables }>,
-	] => {
-		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoutes = new Hono<{
-			Variables: constants.Variables;
-		}>();
+	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
+		const PTZModule = new Hono<{ Variables: constants.Variables }>();
 
-		authenticatedRoutes.use(CameraMiddleware);
+		PTZModule.use(CameraMiddleware);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/",
 			CapabilitiesMiddleware("PTZ"),
 			...PTZHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/load",
 			CapabilitiesMiddleware("PTZ"),
 			...PTZHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
+			"POST",
+			"/",
+			CapabilitiesMiddleware("PTZ"),
+			...MoveHandler.handle(),
+		);
+
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/move",
 			CapabilitiesMiddleware("PTZ"),
 			...MoveHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/pan",
 			CapabilitiesMiddleware("PTZ"),
 			...PanHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/tilt",
 			CapabilitiesMiddleware("PTZ"),
 			...TiltHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/zoom",
 			CapabilitiesMiddleware("PTZ"),
 			...ZoomHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/areazoom",
 			CapabilitiesMiddleware("PTZ"),
 			...AreazoomHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/spin",
 			CapabilitiesMiddleware("PTZ"),
 			...SpinHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"rptz",
 			CapabilitiesMiddleware("PTZ"),
 			...RPTZHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/rpan",
 			CapabilitiesMiddleware("PTZ"),
 			...RPanHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/rtilt",
 			CapabilitiesMiddleware("PTZ"),
 			...RTiltHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/rzoom",
 			CapabilitiesMiddleware("PTZ"),
 			...RZoomHandler.handle(),
 		);
 
-		return [authenticatedRoutes, unauthenticatedRoutes];
+		return PTZModule;
 	},
 	Shutdown: (): void => {},
 };

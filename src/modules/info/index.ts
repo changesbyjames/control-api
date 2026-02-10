@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import type { Module } from "@/modules/module";
+import { RegisterRoute, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import GetInfoHandler from "./get_info_handler";
@@ -11,41 +11,36 @@ import GetScreenshotHandler from "./get_screenshot_handler";
 const InfoModule: Module = {
 	name: "Info",
 	basePath: "/info",
-	Initialize: (
-		config,
-	): [
-		Hono<{ Variables: constants.Variables }>,
-		Hono<{ Variables: constants.Variables }>,
-	] => {
-		const authenticatedRoutes = new Hono<{ Variables: constants.Variables }>();
-		const unauthenticatedRoutes = new Hono<{
-			Variables: constants.Variables;
-		}>();
+	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
+		const InfoModule = new Hono<{ Variables: constants.Variables }>();
 
-		authenticatedRoutes.use(CameraMiddleware);
+		InfoModule.use(CameraMiddleware);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			InfoModule,
 			"GET",
 			"/position",
 			CapabilitiesMiddleware("PTZ"),
 			...GetInfoHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			InfoModule,
 			"GET",
 			"/speed",
 			CapabilitiesMiddleware("PTZ"),
 			...GetSpeedHandler.handle(),
 		);
 
-		authenticatedRoutes.on(
+		RegisterRoute(
+			InfoModule,
 			"GET",
 			"/screenshot",
 			CapabilitiesMiddleware("Screenshots"),
 			...GetScreenshotHandler.handle(),
 		);
 
-		return [authenticatedRoutes, unauthenticatedRoutes];
+		return InfoModule;
 	},
 	Shutdown: (): void => {},
 };

@@ -12,7 +12,7 @@ import type {
 } from "@/models";
 import { CameraManager } from ".";
 import { PTZObserver, IRObserver } from "@/observers";
-import { topicMap } from "@/constants";
+import * as constants from "@/constants";
 import { mapTopicToFriendlyName } from "@/utils";
 
 const observers: Observer[] = [PTZObserver, IRObserver];
@@ -30,9 +30,13 @@ class WebSocketManager {
 		};
 	}
 
-	setupWebsocket(port: number, sharedKey: string) {
-		this.wss = new WebSocketServer({ port: port });
+	setupWebsocket(port: number) {
+		const sharedKey = process.env[constants.sharedKeyKey] ?? "";
+		if (!sharedKey) {
+			throw new Error("sharedKey not found in environment");
+		}
 		const sharedKeyBuffer = Buffer.from(sharedKey, "utf8");
+		this.wss = new WebSocketServer({ port: port });
 
 		this.wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
 			const url = new URL(req.url ?? "", `http://${req.headers.host}`);
@@ -118,7 +122,7 @@ export default new WebSocketManager();
 
 function setupTopics(topics: TopicsMap) {
 	topics["all"] = [];
-	for (const [key, value] of topicMap) {
+	for (const [key, value] of constants.topicMap) {
 		topics[value] = [];
 	}
 }
