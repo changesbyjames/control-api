@@ -33,13 +33,18 @@ export function APIErrorResponse(
 
 export function formatQueryResponse(position: string): Record<string, any> {
 	let o: any = {};
-	position.split("\r\n").forEach((p) => {
-		let j = p.split("=");
-		if (j[0] != "") {
-			let v = j[1].trim();
-			o[j[0]] = !Number.isNaN(Number(v)) ? Number(v) : v;
-		}
-	});
+	position
+		.replaceAll("\r", "")
+		.split("\n")
+		.forEach((p) => {
+			let j = p.split("=");
+			if (j[0] != "") {
+				let v = j[1].trim();
+				o[j[0].trim().replaceAll(" ", "_")] = !Number.isNaN(Number(v))
+					? Number(v)
+					: v;
+			}
+		});
 
 	return o;
 }

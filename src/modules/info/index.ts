@@ -7,6 +7,7 @@ import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 import GetInfoHandler from "./get_info_handler";
 import GetSpeedHandler from "./get_speed_handler";
 import GetScreenshotHandler from "./get_screenshot_handler";
+import GetResolutionHandler from "./get_resolution_handler";
 
 const InfoModule: Module = {
 	name: "Info",
@@ -38,6 +39,13 @@ const InfoModule: Module = {
 			"/screenshot",
 			CapabilitiesMiddleware("Screenshots"),
 			...GetScreenshotHandler.handle(),
+		);
+
+		RegisterRoute(
+			InfoModule,
+			"GET",
+			"/resolution",
+			...GetResolutionHandler.handle(),
 		);
 
 		return InfoModule;
