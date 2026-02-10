@@ -5,30 +5,42 @@ import { ErrorCode } from "@/errors/error_codes";
 import * as constants from "@/constants";
 import { CameraManager } from "@/managers";
 import { APIErrorResponse } from "@/utils";
+import { validator } from "hono-openapi";
+import * as z from "zod";
 
-const CameraMiddleware = createMiddleware<constants.Env>(async (ctx, next) => {
-	const cameraName = ctx.req.header(constants.cameraHeader);
-	if (!cameraName) {
-		return APIErrorResponse(
-			ctx,
-			http.HTTP_STATUS_BAD_REQUEST,
-			ErrorCode.MissingRequiredHeaderCode,
-			new Error("Missing required header 'X-Camera-Name'"),
-		);
-	}
+const CameraMiddleware = [
+	createMiddleware<constants.Env>(
+		validator(
+			"header",
+			z.object({
+				[constants.cameraHeader]: z.string().min(1).max(100),
+			}),
+		),
+	),
+	createMiddleware<constants.Env>(async (ctx, next) => {
+		const cameraName = ctx.req.header(constants.cameraHeader);
+		if (!cameraName) {
+			return APIErrorResponse(
+				ctx,
+				http.HTTP_STATUS_BAD_REQUEST,
+				ErrorCode.MissingRequiredHeaderCode,
+				new Error(`Missing required header '${constants.cameraHeader}'`),
+			);
+		}
 
-	const cam = CameraManager.getCamera(cameraName.toLowerCase());
-	if (!cam) {
-		return APIErrorResponse(
-			ctx,
-			http.HTTP_STATUS_BAD_REQUEST,
-			ErrorCode.UnknownCameraCode,
-			new Error(`No camera matching ${cameraName} found`),
-		);
-	}
+		const cam = CameraManager.getCamera(cameraName.toLowerCase());
+		if (!cam) {
+			return APIErrorResponse(
+				ctx,
+				http.HTTP_STATUS_BAD_REQUEST,
+				ErrorCode.UnknownCameraCode,
+				new Error(`No camera matching ${cameraName} found`),
+			);
+		}
 
-	ctx.set(constants.targetCameraKey, cam);
-	await next();
-});
+		ctx.set(constants.targetCameraKey, cam);
+		await next();
+	}),
+];
 
 export default CameraMiddleware;

@@ -15,6 +15,7 @@ const ConfigModule: Module = {
 			ConfigModule,
 			"GET",
 			"/capabilities/:camera",
+			GetCapabilitiesHandler.openapi,
 			...GetCapabilitiesHandler.handle(),
 		);
 

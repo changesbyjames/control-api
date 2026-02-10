@@ -8,6 +8,7 @@ import { type Handler } from "@/modules/module";
 import { APIErrorResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver, validator } from "hono-openapi";
 
 // prettier-ignore
 const parameterAdapter = z.object({
@@ -15,36 +16,60 @@ const parameterAdapter = z.object({
 });
 
 export const SetParameterHandler: Handler = {
+	openapi: describeRoute({
+		description: "Set a boolean camera parameter",
+		responses: {
+			200: {
+				description: "Parameter state",
+				content: {
+					"application/json": {
+						schema: resolver(z.record(z.string(), z.any())),
+					},
+				},
+			},
+		},
+	}),
 	handle: (parameter: string) => {
-		return createFactory<constants.Env>().createHandlers(async (ctx) => {
-			let enabled;
-			try {
-				enabled = parameterAdapter.parse(await ctx.req.json());
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_REQUEST,
-					ErrorCode.InvalidRequestBodyCode,
-					error,
-				);
-			}
+		return createFactory<constants.Env>().createHandlers(
+			validator("json", parameterAdapter),
+			async (ctx) => {
+				const enabled = ctx.req.valid("json");
 
-			let camera = ctx.get(constants.targetCameraKey);
-			if (!camera) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.InvalidContextCode,
-					errors.ErrCameraNotSet,
-				);
-			}
+				let camera = ctx.get(constants.targetCameraKey);
+				if (!camera) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.InvalidContextCode,
+						errors.ErrCameraNotSet,
+					);
+				}
 
-			return VAPIXManager.SetParameter(ctx, camera, parameter, enabled.enabled);
-		});
+				return VAPIXManager.SetParameter(
+					ctx,
+					camera,
+					parameter,
+					enabled.enabled,
+				);
+			},
+		);
 	},
 };
 
 export const GetParameterHandler: Handler = {
+	openapi: describeRoute({
+		description: "Get a camera parameter",
+		responses: {
+			200: {
+				description: "Parameter state",
+				content: {
+					"application/json": {
+						schema: resolver(z.record(z.string(), z.any())),
+					},
+				},
+			},
+		},
+	}),
 	handle: (parameter: string) => {
 		return createFactory<constants.Env>().createHandlers(async (ctx) => {
 			let camera = ctx.get(constants.targetCameraKey);

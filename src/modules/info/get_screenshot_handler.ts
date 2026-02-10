@@ -7,8 +7,23 @@ import { type Handler } from "@/modules/module";
 import { APIErrorResponse, formatQueryResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver } from "hono-openapi";
+import * as z from "zod";
 
 const GetScreenshotHandler: Handler = {
+	openapi: describeRoute({
+		description: "Get a screenshot of the current view of the camera",
+		responses: {
+			200: {
+				description: "Base64 encoded image",
+				content: {
+					"text/plain": {
+						schema: resolver(z.string()),
+					},
+				},
+			},
+		},
+	}),
 	handle: () => {
 		return createFactory<constants.Env>().createHandlers(async (ctx) => {
 			let camera = ctx.get(constants.targetCameraKey);

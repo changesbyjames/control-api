@@ -4,11 +4,29 @@ import { constants as http } from "http2";
 import * as constants from "@/constants";
 import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
-import { APIErrorResponse, formatQueryResponse } from "@/utils";
+import {
+	APIErrorResponse,
+	formatQueryResponse,
+	PositionMapSchema,
+} from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver } from "hono-openapi";
 
 const GetSpeedHandler: Handler = {
+	openapi: describeRoute({
+		description: "Get the speed of the camera",
+		responses: {
+			200: {
+				description: "Speed of the camera",
+				content: {
+					"application/json": {
+						schema: resolver(PositionMapSchema),
+					},
+				},
+			},
+		},
+	}),
 	handle: () => {
 		return createFactory<constants.Env>().createHandlers(async (ctx) => {
 			let camera = ctx.get(constants.targetCameraKey);

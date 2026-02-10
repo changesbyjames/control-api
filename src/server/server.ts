@@ -4,6 +4,7 @@ import { serve } from "@hono/node-server";
 import * as constants from "@/constants";
 import * as managers from "@/managers";
 import type { Module } from "@/modules/module";
+import { openAPIRouteHandler } from "hono-openapi";
 
 interface ServiceConfig {
 	serverPort: number;
@@ -50,6 +51,21 @@ class Server {
 		}
 
 		this.#serviceConfig = serviceConfig;
+	}
+
+	bootstrapOpenAPI() {
+		this.app.get(
+			"/openapi",
+			openAPIRouteHandler(this.app, {
+				documentation: {
+					info: {
+						title: "Control API",
+						version: "1.0.0",
+						description: "API for controlling cameras",
+					},
+				},
+			}),
+		);
 	}
 
 	async startServer() {

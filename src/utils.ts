@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import { type StatusCode } from "hono/utils/http-status";
+import * as z from "zod";
 
 import * as constants from "@/constants";
 
@@ -7,6 +8,10 @@ interface APIError {
 	code: number;
 	details: string;
 }
+
+export const PositionValueSchema = z.union([z.number(), z.string()]);
+export const PositionMapSchema = z.record(z.string(), PositionValueSchema);
+export type PositionMap = z.infer<typeof PositionMapSchema>;
 
 export function APIErrorResponse(
 	ctx: Context<constants.Env>,
@@ -47,6 +52,10 @@ export function formatQueryResponse(position: string): Record<string, any> {
 		});
 
 	return o;
+}
+
+export function formatPosition(position: string): PositionMap {
+	return PositionMapSchema.parse(formatQueryResponse(position));
 }
 
 export function mapTopicToFriendlyName(topic: string): string | undefined {

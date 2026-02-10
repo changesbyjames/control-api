@@ -8,6 +8,7 @@ import { type Handler } from "@/modules/module";
 import { APIErrorResponse } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
+import { describeRoute, resolver, validator } from "hono-openapi";
 
 const IrAdapter = z.object({
 	light: z
@@ -17,109 +18,114 @@ const IrAdapter = z.object({
 });
 
 const IrHandler: Handler = {
-	adapter: IrAdapter,
-	handle: () => {
-		return createFactory<constants.Env>().createHandlers(async (ctx) => {
-			let ir;
-			try {
-				ir = IrAdapter.parse(await ctx.req.json());
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_REQUEST,
-					ErrorCode.InvalidRequestBodyCode,
-					error,
-				);
-			}
-
-			let camera = ctx.get(constants.targetCameraKey);
-			if (!camera) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.InvalidContextCode,
-					errors.ErrCameraNotSet,
-				);
-			}
-
-			let irFilter: string;
-			switch (ir.state) {
-				case "on":
-					irFilter = "off";
-					break;
-				case "off":
-					irFilter = "on";
-					break;
-				case "auto":
-					irFilter = "auto";
-					break;
-			}
-
-			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
-				ircutfilter: irFilter,
-			});
-
-			let response;
-			try {
-				response = await VAPIXManager.makeAPICall(camera.client, url);
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrUnableToCallVAPIX(error),
-				);
-			}
-
-			if (!response.ok) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_GATEWAY,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrVAPIXCallFailed(await response.text()),
-				);
-			}
-
-			url = VAPIXManager.URLBuilder(camera.host, "lightcontrol");
-			let data = {
-				apiVersion: "1.0",
-				context: "light",
-				method:
-					ir.state == "on" || ir.state == "auto"
-						? "enableLight"
-						: "disableLight",
-				params: {
-					lightID: ir.light,
+	openapi: describeRoute({
+		description: "Set IR filter and light state together",
+		responses: {
+			200: {
+				description: "Successfully submitted to the camera",
+				content: {
+					"text/plain": {
+						schema: resolver(z.string()),
+					},
 				},
-			};
+			},
+		},
+	}),
+	handle: () => {
+		return createFactory<constants.Env>().createHandlers(
+			validator("json", IrAdapter),
+			async (ctx) => {
+				const ir = ctx.req.valid("json");
 
-			try {
-				response = await VAPIXManager.makeAPICall(
-					camera.client,
-					url,
-					"POST",
-					data,
-				);
-			} catch (error) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrUnableToCallVAPIX(error),
-				);
-			}
+				let camera = ctx.get(constants.targetCameraKey);
+				if (!camera) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.InvalidContextCode,
+						errors.ErrCameraNotSet,
+					);
+				}
 
-			if (!response.ok) {
-				return APIErrorResponse(
-					ctx,
-					http.HTTP_STATUS_BAD_GATEWAY,
-					ErrorCode.VAPIXCallFailed,
-					errors.ErrVAPIXCallFailed(await response.text()),
-				);
-			}
+				let irFilter: string;
+				switch (ir.state) {
+					case "on":
+						irFilter = "off";
+						break;
+					case "off":
+						irFilter = "on";
+						break;
+					case "auto":
+						irFilter = "auto";
+						break;
+				}
 
-			return ctx.text(await response.text());
-		});
+				let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+					ircutfilter: irFilter,
+				});
+
+				let response;
+				try {
+					response = await VAPIXManager.makeAPICall(camera.client, url);
+				} catch (error) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrUnableToCallVAPIX(error),
+					);
+				}
+
+				if (!response.ok) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_BAD_GATEWAY,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrVAPIXCallFailed(await response.text()),
+					);
+				}
+
+				url = VAPIXManager.URLBuilder(camera.host, "lightcontrol");
+				let data = {
+					apiVersion: "1.0",
+					context: "light",
+					method:
+						ir.state == "on" || ir.state == "auto"
+							? "enableLight"
+							: "disableLight",
+					params: {
+						lightID: ir.light,
+					},
+				};
+
+				try {
+					response = await VAPIXManager.makeAPICall(
+						camera.client,
+						url,
+						"POST",
+						data,
+					);
+				} catch (error) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrUnableToCallVAPIX(error),
+					);
+				}
+
+				if (!response.ok) {
+					return APIErrorResponse(
+						ctx,
+						http.HTTP_STATUS_BAD_GATEWAY,
+						ErrorCode.VAPIXCallFailed,
+						errors.ErrVAPIXCallFailed(await response.text()),
+					);
+				}
+
+				return ctx.text(await response.text());
+			},
+		);
 	},
 };
 

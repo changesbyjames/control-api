@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import { RegisterRoute, type Module } from "@/modules/module";
+import { RegisterRoute, serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import FocusHandler from "./focus_handler";
@@ -22,7 +22,7 @@ const ImagingModule: Module = {
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
 		const ImagingModule = new Hono<{ Variables: constants.Variables }>();
 
-		ImagingModule.use(CameraMiddleware);
+		ImagingModule.use(...CameraMiddleware);
 
 		// Absolute imaging
 		RegisterRoute(
@@ -30,7 +30,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/focus",
 			CapabilitiesMiddleware("Focus"),
-			...FocusHandler.handle(),
+			...serveHandler(FocusHandler),
 		);
 
 		RegisterRoute(
@@ -38,7 +38,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/brightness",
 			CapabilitiesMiddleware("Brightness"),
-			...BrightnessHandler.handle(),
+			...serveHandler(BrightnessHandler),
 		);
 
 		RegisterRoute(
@@ -46,7 +46,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/iris",
 			CapabilitiesMiddleware("Iris"),
-			...IrisHandler.handle(),
+			...serveHandler(IrisHandler),
 		);
 
 		// Relative imaging
@@ -55,7 +55,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/rfocus",
 			CapabilitiesMiddleware("Focus"),
-			...RFocusHandler.handle(),
+			...serveHandler(RFocusHandler),
 		);
 
 		RegisterRoute(
@@ -63,7 +63,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/rbrightness",
 			CapabilitiesMiddleware("Brightness"),
-			...RBrightnessHandler.handle(),
+			...serveHandler(RBrightnessHandler),
 		);
 
 		RegisterRoute(
@@ -71,7 +71,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/riris",
 			CapabilitiesMiddleware("Iris"),
-			...IRrisHandler.handle(),
+			...serveHandler(IRrisHandler),
 		);
 
 		// Auto imaging
@@ -80,7 +80,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/autofocus",
 			CapabilitiesMiddleware("Focus"),
-			...AutofocusHandler.handle(),
+			...serveHandler(AutofocusHandler),
 		);
 
 		RegisterRoute(
@@ -88,7 +88,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/autoiris",
 			CapabilitiesMiddleware("Iris"),
-			...AutoirisHandler.handle(),
+			...serveHandler(AutoirisHandler),
 		);
 
 		// Continuous imaging
@@ -97,7 +97,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/cfocus",
 			CapabilitiesMiddleware("Focus"),
-			...CFocusHandler.handle(),
+			...serveHandler(CFocusHandler),
 		);
 
 		RegisterRoute(
@@ -105,7 +105,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/cbrightness",
 			CapabilitiesMiddleware("ContinuousBrightness"),
-			...CBrightnessHandler.handle(),
+			...serveHandler(CBrightnessHandler),
 		);
 
 		RegisterRoute(
@@ -113,7 +113,7 @@ const ImagingModule: Module = {
 			"POST",
 			"/ciris",
 			CapabilitiesMiddleware("ContinuousIris"),
-			...CIrisHandler.handle(),
+			...serveHandler(CIrisHandler),
 		);
 
 		return ImagingModule;
