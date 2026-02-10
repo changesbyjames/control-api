@@ -1,6 +1,6 @@
 import type { Camera, Observer, Message } from "@/models";
 import { WebSocketManager, VAPIXManager } from "@/managers";
-import { formatPosition } from "@/utils";
+import { formatQueryResponse } from "@/utils";
 
 const PTZObserver: Observer = {
 	name: "ptz movement",
@@ -25,20 +25,79 @@ const PTZObserver: Observer = {
 			data: {},
 		};
 
-		let is_moving = false;
-		let query = "position";
+		let is_moving: boolean;
+		let info: Record<string, any>;
 
 		if (data.is_moving == 1) {
-			query = "speed";
+			let param = "PTZ.Various.V1.MaxProportionalSpeed";
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+				query: "speed",
+			});
+
+			let response;
+			try {
+				response = await VAPIXManager.makeAPICall(camera.client, url);
+			} catch (error) {
+				msg.data = error;
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			if (!response.ok) {
+				msg.data = await response.text();
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			info = formatQueryResponse(await response.text());
+
+			url = VAPIXManager.URLBuilder(camera.host, "param", {
+				action: "list",
+				group: param,
+			});
+
+			try {
+				response = await VAPIXManager.makeAPICall(camera.client, url);
+			} catch (error) {
+				msg.data = error;
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			if (!response.ok) {
+				msg.data = await response.text();
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			const proportionalSpeed = formatQueryResponse(await response.text());
+			info.proportional_speed = proportionalSpeed[param];
 			is_moving = true;
+		} else {
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+				query: "position",
+			});
+
+			let response;
+			try {
+				response = await VAPIXManager.makeAPICall(camera.client, url);
+			} catch (error) {
+				msg.data = error;
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			if (!response.ok) {
+				msg.data = await response.text();
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			info = formatQueryResponse(await response.text());
+
+			is_moving = false;
 		}
 
-		let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
-			query: query,
-		});
-
-		let response = await VAPIXManager.makeAPICall(camera.client, url);
-		let info = formatPosition(await response.text());
 		msg.data = {
 			is_moving: is_moving,
 			info,

@@ -1,43 +1,54 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import { serveHandler, type Module } from "@/modules/module";
+import { RegisterRoute, serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import GetInfoHandler from "./get_info_handler";
 import GetSpeedHandler from "./get_speed_handler";
 import GetScreenshotHandler from "./get_screenshot_handler";
+import GetResolutionHandler from "./get_resolution_handler";
 
 const InfoModule: Module = {
 	name: "Info",
 	basePath: "/info",
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const infoModule = new Hono<{ Variables: constants.Variables }>();
+		const InfoModule = new Hono<{ Variables: constants.Variables }>();
 
-		infoModule.use(...CameraMiddleware);
+		InfoModule.use(...CameraMiddleware);
 
-		infoModule.on(
+		RegisterRoute(
+			InfoModule,
 			"GET",
 			"/position",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(GetInfoHandler),
 		);
 
-		infoModule.on(
+		RegisterRoute(
+			InfoModule,
 			"GET",
 			"/speed",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(GetSpeedHandler),
 		);
 
-		infoModule.on(
+		RegisterRoute(
+			InfoModule,
 			"GET",
 			"/screenshot",
 			CapabilitiesMiddleware("Screenshots"),
 			...serveHandler(GetScreenshotHandler),
 		);
 
-		return infoModule;
+		RegisterRoute(
+			InfoModule,
+			"GET",
+			"/resolution",
+			...GetResolutionHandler.handle(),
+		);
+
+		return InfoModule;
 	},
 	Shutdown: (): void => {},
 };

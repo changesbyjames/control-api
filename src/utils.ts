@@ -36,21 +36,26 @@ export function APIErrorResponse(
 	return ctx.json(newAPIError);
 }
 
+export function formatQueryResponse(position: string): Record<string, any> {
+	let o: any = {};
+	position
+		.replaceAll("\r", "")
+		.split("\n")
+		.forEach((p) => {
+			let j = p.split("=");
+			if (j[0] != "") {
+				let v = j[1].trim();
+				o[j[0].trim().replaceAll(" ", "_")] = !Number.isNaN(Number(v))
+					? Number(v)
+					: v;
+			}
+		});
+
+	return o;
+}
+
 export function formatPosition(position: string): PositionMap {
-	const parsed: PositionMap = {};
-
-	position.split("\r\n").forEach((entry) => {
-		const [key, ...rest] = entry.split("=");
-		if (key === "" || rest.length === 0) {
-			return;
-		}
-
-		const value = rest.join("=").trim();
-		const maybeNumber = Number(value);
-		parsed[key] = Number.isNaN(maybeNumber) ? value : maybeNumber;
-	});
-
-	return PositionMapSchema.parse(parsed);
+	return PositionMapSchema.parse(formatQueryResponse(position));
 }
 
 export function mapTopicToFriendlyName(topic: string): string | undefined {

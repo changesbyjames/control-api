@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import { serveHandler, type Module } from "@/modules/module";
+import { RegisterRoute, serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import PTZHandler from "./ptz_handler";
@@ -20,95 +20,115 @@ const PTZModule: Module = {
 	name: "PTZ",
 	basePath: "/ptz",
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const ptzModule = new Hono<{ Variables: constants.Variables }>();
+		const PTZModule = new Hono<{ Variables: constants.Variables }>();
 
-		ptzModule.use(...CameraMiddleware);
+		PTZModule.use(...CameraMiddleware);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(PTZHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/load",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(PTZHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
+			"POST",
+			"/",
+			CapabilitiesMiddleware("PTZ"),
+			...MoveHandler.handle(),
+		);
+
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/move",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(MoveHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/pan",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(PanHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/tilt",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(TiltHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/zoom",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(ZoomHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/areazoom",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(AreazoomHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/spin",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(SpinHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"rptz",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(RPTZHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/rpan",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(RPanHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/rtilt",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(RTiltHandler),
 		);
 
-		ptzModule.on(
+		RegisterRoute(
+			PTZModule,
 			"POST",
 			"/rzoom",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(RZoomHandler),
 		);
 
-		return ptzModule;
+		return PTZModule;
 	},
 	Shutdown: (): void => {},
 };

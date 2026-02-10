@@ -4,7 +4,6 @@ import { serve } from "@hono/node-server";
 import * as constants from "@/constants";
 import * as managers from "@/managers";
 import type { Module } from "@/modules/module";
-import AuthorizationMiddleware from "@/server/middleware/authorization";
 import { openAPIRouteHandler } from "hono-openapi";
 
 interface ServiceConfig {
@@ -15,25 +14,15 @@ interface ServiceConfig {
 
 class Server {
 	// public
-	readonly app: Hono<{ Variables: constants.Variables }>;
+	readonly app = new Hono<{
+		Variables: constants.Variables;
+	}>();
 
 	// private
-	#sharedKey!: string;
 	#serviceConfig!: ServiceConfig;
 	#modules: { [key: string]: Module } = {};
 
-	constructor() {
-		this.app = new Hono<{
-			Variables: constants.Variables;
-		}>();
-
-		this.#sharedKey = process.env[constants.sharedKeyKey] ?? "";
-		if (!this.#sharedKey) {
-			throw new Error("sharedKey not found in environment");
-		}
-
-		this.app.use(AuthorizationMiddleware(this.#sharedKey));
-	}
+	constructor() {}
 
 	registerModule(module: Module) {
 		if (this.#serviceConfig.moduleMap[module.name]) {
@@ -80,10 +69,7 @@ class Server {
 	}
 
 	async startServer() {
-		managers.WebSocketManager.setupWebsocket(
-			this.#serviceConfig.websocketPort,
-			this.#sharedKey,
-		);
+		managers.WebSocketManager.setupWebsocket(this.#serviceConfig.websocketPort);
 		serve(
 			{
 				fetch: this.app.fetch,

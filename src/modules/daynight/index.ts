@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import { serveHandler, type Module } from "@/modules/module";
+import { RegisterRoute, serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import IrFilterHandler from "./ir_filter_handler";
@@ -12,32 +12,35 @@ const DayNightModule: Module = {
 	name: "DayNight",
 	basePath: "/ir",
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const dayNightModule = new Hono<{ Variables: constants.Variables }>();
+		const DayNightModule = new Hono<{ Variables: constants.Variables }>();
 
-		dayNightModule.use(...CameraMiddleware);
+		DayNightModule.use(...CameraMiddleware);
 
-		dayNightModule.on(
+		RegisterRoute(
+			DayNightModule,
 			"POST",
-			"",
+			"/",
 			CapabilitiesMiddleware("IrCutFilter", "IrLight"),
 			...serveHandler(IrHandler),
 		);
 
-		dayNightModule.on(
+		RegisterRoute(
+			DayNightModule,
 			"POST",
 			"/filter",
 			CapabilitiesMiddleware("IrCutFilter"),
 			...serveHandler(IrFilterHandler),
 		);
 
-		dayNightModule.on(
+		RegisterRoute(
+			DayNightModule,
 			"POST",
 			"/light",
 			CapabilitiesMiddleware("IrLight"),
 			...serveHandler(IrLightHandler),
 		);
 
-		return dayNightModule;
+		return DayNightModule;
 	},
 	Shutdown: (): void => {},
 };

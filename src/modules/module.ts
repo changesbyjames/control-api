@@ -13,6 +13,7 @@ import InfoModule from "./info";
 import ImagingModule from "./imaging";
 import SettingsModule from "./settings";
 import ConfigModule from "./config";
+import AuthenticationMiddleware from "@/server/middleware/authentication";
 
 export interface Module {
 	name: string;
@@ -44,3 +45,28 @@ export const modules: Module[] = [
 	SettingsModule,
 	ConfigModule,
 ];
+
+export function RegisterUnauthenticatedRoute(
+	module: Hono<{ Variables: constants.Variables }>,
+	method: string,
+	path: string,
+	...handlers: HonoHandler[]
+) {
+	module.on(method, [path], ...handlers);
+}
+
+export function RegisterRoute(
+	module: Hono<{ Variables: constants.Variables }>,
+	method: string,
+	path: string,
+	...handlers: HonoHandler[]
+) {
+	// Registers unauthenticated route... but adds authentication
+	RegisterUnauthenticatedRoute(
+		module,
+		method,
+		path,
+		AuthenticationMiddleware,
+		...handlers,
+	);
+}

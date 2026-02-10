@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
 import * as constants from "@/constants";
-import { serveHandler, type Module } from "@/modules/module";
+import { RegisterRoute, serveHandler, type Module } from "@/modules/module";
 import { CameraMiddleware, CapabilitiesMiddleware } from "@/server/middleware";
 
 import {
@@ -16,39 +16,44 @@ const SettingsModule: Module = {
 	name: "Settings",
 	basePath: "/settings",
 	Initialize: (config): Hono<{ Variables: constants.Variables }> => {
-		const settingsModule = new Hono<{ Variables: constants.Variables }>();
+		const SettingsModule = new Hono<{ Variables: constants.Variables }>();
 
-		settingsModule.use(...CameraMiddleware);
+		SettingsModule.use(...CameraMiddleware);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/quickzoom",
 			CapabilitiesMiddleware("PTZ", "QuickZoom"),
 			...serveHandler(GetParameterHandler, "PTZ.UserAdv.U1.QuickZoom"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/quickzoom",
 			CapabilitiesMiddleware("PTZ", "QuickZoom"),
 			...serveHandler(SetParameterHandler, "PTZ.UserAdv.U1.QuickZoom"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/spotfocus",
 			CapabilitiesMiddleware("SpotFocus"),
 			...serveHandler(GetParameterHandler, "PTZ.UserAdv.U1.SpotFocus"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/spotfocus",
 			CapabilitiesMiddleware("SpotFocus"),
 			...serveHandler(SetParameterHandler, "PTZ.UserAdv.U1.SpotFocus"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/saturation",
 			CapabilitiesMiddleware("Appearance"),
@@ -59,14 +64,16 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/saturation",
 			CapabilitiesMiddleware("Appearance"),
 			...serveHandler(GetParameterHandler, "ImageSource.I0.Sensor.ColorLevel"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/brightness",
 			CapabilitiesMiddleware("Appearance"),
@@ -77,14 +84,16 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/brightness",
 			CapabilitiesMiddleware("Appearance"),
 			...serveHandler(GetParameterHandler, "ImageSource.I0.Sensor.Brightness"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/contrast",
 			CapabilitiesMiddleware("Appearance"),
@@ -95,14 +104,16 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/contrast",
 			CapabilitiesMiddleware("Appearance"),
 			...serveHandler(GetParameterHandler, "ImageSource.I0.Sensor.Contrast"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/sharpness",
 			CapabilitiesMiddleware("Appearance"),
@@ -113,14 +124,16 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/sharpness",
 			CapabilitiesMiddleware("Appearance"),
 			...serveHandler(GetParameterHandler, "ImageSource.I0.Sensor.Sharpness"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/localcontrast",
 			CapabilitiesMiddleware("WideDynamicRange"),
@@ -131,7 +144,8 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/localcontrast",
 			CapabilitiesMiddleware("WideDynamicRange"),
@@ -141,7 +155,8 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/tonemapping",
 			CapabilitiesMiddleware("WideDynamicRange"),
@@ -152,14 +167,16 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/tonemapping",
 			CapabilitiesMiddleware("WideDynamicRange"),
 			...serveHandler(GetParameterHandler, "ImageSource.I0.Sensor.ToneMapping"),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/proportionalspeed",
 			CapabilitiesMiddleware("PTZ"),
@@ -170,7 +187,8 @@ const SettingsModule: Module = {
 			),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/proportionalspeed",
 			CapabilitiesMiddleware("PTZ"),
@@ -181,21 +199,23 @@ const SettingsModule: Module = {
 		);
 
 		// This is identical to info/speed, I just couldn't decide where to put it
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"GET",
 			"/speed",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(GetSpeedHandler),
 		);
 
-		settingsModule.on(
+		RegisterRoute(
+			SettingsModule,
 			"POST",
 			"/speed",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(SetSpeedHandler),
 		);
 
-		return settingsModule;
+		return SettingsModule;
 	},
 	Shutdown: (): void => {},
 };

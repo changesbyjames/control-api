@@ -5,7 +5,11 @@ import { constants as http } from "http2";
 import * as constants from "@/constants";
 import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
-import { APIErrorResponse, formatPosition, PositionMapSchema } from "@/utils";
+import {
+	APIErrorResponse,
+	formatQueryResponse,
+	PositionMapSchema,
+} from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
 import { describeRoute, resolver, validator } from "hono-openapi";
@@ -94,7 +98,7 @@ const SetSpeedHandler: Handler = {
 				}
 
 				let values = await response.text();
-				return ctx.json(formatPosition(values));
+				return ctx.json(formatQueryResponse(values));
 			},
 		);
 	},

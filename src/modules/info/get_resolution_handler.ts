@@ -4,21 +4,24 @@ import { constants as http } from "http2";
 import * as constants from "@/constants";
 import { VAPIXManager } from "@/managers";
 import { type Handler } from "@/modules/module";
-import { APIErrorResponse, formatQueryResponse } from "@/utils";
+import {
+	APIErrorResponse,
+	formatQueryResponse,
+	PositionMapSchema,
+} from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
 import { describeRoute, resolver } from "hono-openapi";
-import * as z from "zod";
 
-const GetScreenshotHandler: Handler = {
+const GetResolutionHandler: Handler = {
 	openapi: describeRoute({
-		description: "Get a screenshot of the current view of the camera",
+		description: "Get the camera resolution settings",
 		responses: {
 			200: {
-				description: "Base64 encoded image",
+				description: "Current resolution information",
 				content: {
-					"text/plain": {
-						schema: resolver(z.string()),
+					"application/json": {
+						schema: resolver(PositionMapSchema),
 					},
 				},
 			},
@@ -36,7 +39,7 @@ const GetScreenshotHandler: Handler = {
 				);
 			}
 
-			let url = VAPIXManager.URLBuilder(camera.host, "jpg/image");
+			let url = VAPIXManager.URLBuilder(camera.host, "imagesize");
 
 			let response;
 			try {
@@ -59,11 +62,10 @@ const GetScreenshotHandler: Handler = {
 				);
 			}
 
-			const arrayBuffer = await response.arrayBuffer();
-			const base64 = Buffer.from(arrayBuffer).toString("base64");
-			return ctx.text(base64);
+			let values = await response.text();
+			return ctx.json(formatQueryResponse(values));
 		});
 	},
 };
 
-export default GetScreenshotHandler;
+export default GetResolutionHandler;
