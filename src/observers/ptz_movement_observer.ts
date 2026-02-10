@@ -34,7 +34,21 @@ const PTZObserver: Observer = {
 				query: "speed",
 			});
 
-			let response = await VAPIXManager.makeAPICall(camera.client, url);
+			let response;
+			try {
+				response = await VAPIXManager.makeAPICall(camera.client, url);
+			} catch (error) {
+				msg.data = error;
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			if (!response.ok) {
+				msg.data = await response.text();
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
 			info = formatQueryResponse(await response.text());
 
 			url = VAPIXManager.URLBuilder(camera.host, "param", {
@@ -42,7 +56,19 @@ const PTZObserver: Observer = {
 				group: param,
 			});
 
-			response = await VAPIXManager.makeAPICall(camera.client, url);
+			try {
+				response = await VAPIXManager.makeAPICall(camera.client, url);
+			} catch (error) {
+				msg.data = error;
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			if (!response.ok) {
+				msg.data = await response.text();
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
 
 			const proportionalSpeed = formatQueryResponse(await response.text());
 			info.proportional_speed = proportionalSpeed[param];
@@ -52,7 +78,21 @@ const PTZObserver: Observer = {
 				query: "position",
 			});
 
-			let response = await VAPIXManager.makeAPICall(camera.client, url);
+			let response;
+			try {
+				response = await VAPIXManager.makeAPICall(camera.client, url);
+			} catch (error) {
+				msg.data = error;
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
+			if (!response.ok) {
+				msg.data = await response.text();
+				WebSocketManager.sendMessageToClients(msg);
+				return;
+			}
+
 			info = formatQueryResponse(await response.text());
 
 			is_moving = false;
