@@ -4,7 +4,6 @@ import { serve } from "@hono/node-server";
 import * as constants from "@/constants";
 import * as managers from "@/managers";
 import type { Module } from "@/modules/module";
-import AuthenticationMiddleware from "@/server/middleware/authentication";
 
 interface ServiceConfig {
 	serverPort: number;
