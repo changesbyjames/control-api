@@ -17,7 +17,7 @@ const GetScreenshotHandler: Handler = {
 			200: {
 				description: "Base64 encoded image",
 				content: {
-					"application/json": {
+					"text/plain": {
 						schema: resolver(z.string()),
 					},
 				},

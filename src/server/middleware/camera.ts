@@ -24,7 +24,7 @@ const CameraMiddleware = [
 				ctx,
 				http.HTTP_STATUS_BAD_REQUEST,
 				ErrorCode.MissingRequiredHeaderCode,
-				new Error("Missing required header 'X-Camera-Name'"),
+				new Error(`Missing required header '${constants.cameraHeader}'`),
 			);
 		}
 

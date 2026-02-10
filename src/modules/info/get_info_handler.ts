@@ -8,8 +8,7 @@ import { APIErrorResponse, formatPosition, PositionMapSchema } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
 
-import * as z from "zod";
-import { describeRoute, resolver, validator } from "hono-openapi";
+import { describeRoute, resolver } from "hono-openapi";
 
 const GetInfoHandler: Handler = {
 	openapi: describeRoute({
@@ -26,48 +25,45 @@ const GetInfoHandler: Handler = {
 		},
 	}),
 	handle: () => {
-		return createFactory<constants.Env>().createHandlers(
-			validator("header", z.object({ "X-Camera-Name": z.string() })),
-			async (ctx) => {
-				let camera = ctx.get(constants.targetCameraKey);
-				if (!camera) {
-					return APIErrorResponse(
-						ctx,
-						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-						ErrorCode.InvalidContextCode,
-						errors.ErrCameraNotSet,
-					);
-				}
+		return createFactory<constants.Env>().createHandlers(async (ctx) => {
+			let camera = ctx.get(constants.targetCameraKey);
+			if (!camera) {
+				return APIErrorResponse(
+					ctx,
+					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+					ErrorCode.InvalidContextCode,
+					errors.ErrCameraNotSet,
+				);
+			}
 
-				let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
-					query: "position",
-				});
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+				query: "position",
+			});
 
-				let response;
-				try {
-					response = await VAPIXManager.makeAPICall(camera.client, url);
-				} catch (error) {
-					return APIErrorResponse(
-						ctx,
-						http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-						ErrorCode.VAPIXCallFailed,
-						errors.ErrUnableToCallVAPIX(error),
-					);
-				}
+			let response;
+			try {
+				response = await VAPIXManager.makeAPICall(camera.client, url);
+			} catch (error) {
+				return APIErrorResponse(
+					ctx,
+					http.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+					ErrorCode.VAPIXCallFailed,
+					errors.ErrUnableToCallVAPIX(error),
+				);
+			}
 
-				if (!response.ok) {
-					return APIErrorResponse(
-						ctx,
-						http.HTTP_STATUS_BAD_GATEWAY,
-						ErrorCode.VAPIXCallFailed,
-						errors.ErrVAPIXCallFailed(await response.text()),
-					);
-				}
+			if (!response.ok) {
+				return APIErrorResponse(
+					ctx,
+					http.HTTP_STATUS_BAD_GATEWAY,
+					ErrorCode.VAPIXCallFailed,
+					errors.ErrVAPIXCallFailed(await response.text()),
+				);
+			}
 
-				let values = await response.text();
-				return ctx.json(formatPosition(values));
-			},
-		);
+			let values = await response.text();
+			return ctx.json(formatPosition(values));
+		});
 	},
 };
 
