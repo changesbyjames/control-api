@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build && npm prune --production
+RUN && npm prune --production
 
 VOLUME ["/app/configs"]
 CMD ["npm", "start"]
