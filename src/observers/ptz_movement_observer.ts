@@ -25,20 +25,42 @@ const PTZObserver: Observer = {
 			data: {},
 		};
 
-		let is_moving = false;
-		let query = "position";
+		let is_moving: boolean;
+		let info: Record<string, any>;
 
 		if (data.is_moving == 1) {
-			query = "speed";
+			let param = "PTZ.Various.V1.MaxProportionalSpeed";
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+				query: "speed",
+			});
+
+			let response = await VAPIXManager.makeAPICall(camera.client, url);
+			info = formatPosition(await response.text()) as Record<string, any>;
+
+			url = VAPIXManager.URLBuilder(camera.host, "param", {
+				action: "list",
+				group: param,
+			});
+
+			response = await VAPIXManager.makeAPICall(camera.client, url);
+
+			const proportionalSpeed = formatPosition(await response.text()) as Record<
+				string,
+				any
+			>;
+			info.proportional_speed = proportionalSpeed[param];
 			is_moving = true;
+		} else {
+			let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
+				query: "position",
+			});
+
+			let response = await VAPIXManager.makeAPICall(camera.client, url);
+			info = formatPosition(await response.text()) as Record<string, unknown>;
+
+			is_moving = false;
 		}
 
-		let url = VAPIXManager.URLBuilder(camera.host, "com/ptz", {
-			query: query,
-		});
-
-		let response = await VAPIXManager.makeAPICall(camera.client, url);
-		let info = formatPosition(await response.text());
 		msg.data = {
 			is_moving: is_moving,
 			info,
