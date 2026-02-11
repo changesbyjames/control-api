@@ -45,7 +45,7 @@ const InfoModule: Module = {
 			InfoModule,
 			"GET",
 			"/resolution",
-			...GetResolutionHandler.handle(),
+			...serveHandler(GetResolutionHandler),
 		);
 
 		return InfoModule;

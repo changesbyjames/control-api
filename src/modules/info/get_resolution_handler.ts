@@ -17,10 +17,10 @@ const GetResolutionHandler: Handler = {
 	openapi: describeRoute({
 		summary: "Get Resolution",
 		tags: ["Info"],
-		description: "Get the camera resolution settings",
+		description: "Get the camera's output resolution",
 		responses: {
 			200: {
-				description: "Current resolution information",
+				description: "Current resolution",
 				content: {
 					"application/json": {
 						schema: resolver(PositionMapSchema),
