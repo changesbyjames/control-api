@@ -16,6 +16,7 @@ const rzoomAdapter = z.object({
 
 const RZoomHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["PTZ"],
 		description: "Set relative zoom movement of the camera",
 		responses: {
 			200: {

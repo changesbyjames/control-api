@@ -19,6 +19,7 @@ function newParameterAdapter(max: number) {
 
 const SetIntParameterHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Settings"],
 		description: "Set an integer camera parameter",
 		responses: {
 			200: {

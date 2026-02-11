@@ -15,6 +15,7 @@ import { describeRoute, resolver } from "hono-openapi";
 
 const GetSpeedHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Info"],
 		description: "Get the speed of the camera",
 		responses: {
 			200: {

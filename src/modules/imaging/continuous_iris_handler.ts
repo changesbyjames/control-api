@@ -16,6 +16,7 @@ const cirisAdapter = z.object({
 
 const CIrisHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Imaging"],
 		description: "Set continuous iris movement",
 		responses: {
 			200: {

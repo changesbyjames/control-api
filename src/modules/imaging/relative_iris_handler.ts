@@ -16,6 +16,7 @@ const ririsAdapter = z.object({
 
 const IRrisHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Imaging"],
 		description: "Set relative iris movement",
 		responses: {
 			200: {

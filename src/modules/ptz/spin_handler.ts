@@ -18,6 +18,7 @@ const spinAdapter = z.object({
 
 const SpinHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["PTZ"],
 		description: "Set continuous pan, tilt, and zoom movement",
 		responses: {
 			200: {

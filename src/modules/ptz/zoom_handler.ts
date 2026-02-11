@@ -16,6 +16,7 @@ const zoomAdapter = z.object({
 
 const ZoomHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["PTZ"],
 		description: "Set absolute zoom of the camera",
 		responses: {
 			200: {

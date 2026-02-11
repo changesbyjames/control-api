@@ -15,6 +15,7 @@ import { describeRoute, resolver } from "hono-openapi";
 
 const GetResolutionHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Info"],
 		description: "Get the camera resolution settings",
 		responses: {
 			200: {

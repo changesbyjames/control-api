@@ -16,6 +16,7 @@ const autoirisAdapter = z.object({
 
 const AutoirisHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Imaging"],
 		description: "Set auto iris mode",
 		responses: {
 			200: {

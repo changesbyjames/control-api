@@ -16,6 +16,7 @@ const brightnessAdapter = z.object({
 
 const BrightnessHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Imaging"],
 		description: "Set absolute brightness level",
 		responses: {
 			200: {

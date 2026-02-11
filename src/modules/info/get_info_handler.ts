@@ -16,6 +16,7 @@ import { describeRoute, resolver } from "hono-openapi";
 
 const GetInfoHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Info"],
 		description: "Get information about a specific camera",
 		responses: {
 			200: {

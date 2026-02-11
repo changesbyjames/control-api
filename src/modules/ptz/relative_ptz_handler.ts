@@ -28,6 +28,7 @@ const rptzAdapter = z
 
 const RPTZHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["PTZ"],
 		description: "Set relative pan, tilt, and zoom values",
 		responses: {
 			200: {

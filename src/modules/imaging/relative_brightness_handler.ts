@@ -16,6 +16,7 @@ const rbrightnessAdapter = z.object({
 
 const RBrightnessHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Imaging"],
 		description: "Set relative brightness movement",
 		responses: {
 			200: {

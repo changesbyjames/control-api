@@ -16,6 +16,7 @@ const rfocusAdapter = z.object({
 
 const RFocusHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Imaging"],
 		description: "Set relative focus movement",
 		responses: {
 			200: {

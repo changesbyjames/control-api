@@ -16,6 +16,7 @@ const rtiltAdapter = z.object({
 
 const RTiltHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["PTZ"],
 		description: "Set relative tilt movement of the camera",
 		responses: {
 			200: {

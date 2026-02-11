@@ -11,6 +11,7 @@ import { describeRoute, resolver, validator } from "hono-openapi";
 
 const GetCapabilitiesHandler: Handler = {
 	openapi: describeRoute({
+		tags: ["Config"],
 		description: "Get capabilities for a specific camera",
 		responses: {
 			200: {
