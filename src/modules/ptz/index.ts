@@ -35,14 +35,6 @@ const PTZModule: Module = {
 		RegisterRoute(
 			PTZModule,
 			"POST",
-			"/",
-			CapabilitiesMiddleware("PTZ"),
-			...MoveHandler.handle(),
-		);
-
-		RegisterRoute(
-			PTZModule,
-			"POST",
 			"/move",
 			CapabilitiesMiddleware("PTZ"),
 			...serveHandler(MoveHandler),

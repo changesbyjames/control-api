@@ -17,7 +17,6 @@ const parameterAdapter = z.object({
 
 export const SetParameterHandler: Handler = {
 	openapi: describeRoute({
-		summary: "Set Boolean Parameter",
 		tags: ["Settings"],
 		description: "Set a boolean camera parameter",
 		responses: {
