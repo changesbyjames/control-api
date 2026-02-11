@@ -16,6 +16,7 @@ const rpanAdapter = z.object({
 
 const RPanHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Relative Pan",
 		tags: ["PTZ"],
 		description: "Set relative pan movement of the camera",
 		responses: {

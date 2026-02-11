@@ -12,6 +12,7 @@ import * as z from "zod";
 
 const GetScreenshotHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Get Screenshot",
 		tags: ["Info"],
 		description: "Get a screenshot of the current view of the camera",
 		responses: {

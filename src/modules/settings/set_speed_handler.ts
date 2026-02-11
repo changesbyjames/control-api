@@ -20,6 +20,7 @@ const speedAdapter = z.object({
 
 const SetSpeedHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Set Speed",
 		tags: ["Settings"],
 		description: "Set camera speed and return updated speed",
 		responses: {

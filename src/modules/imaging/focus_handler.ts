@@ -16,6 +16,7 @@ const focusAdapter = z.object({
 
 const FocusHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Focus",
 		tags: ["Imaging"],
 		description: "Set absolute focus level",
 		responses: {

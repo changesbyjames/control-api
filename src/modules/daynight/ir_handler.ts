@@ -19,6 +19,7 @@ const IrAdapter = z.object({
 
 const IrHandler: Handler = {
 	openapi: describeRoute({
+		summary: "IR",
 		tags: ["DayNight"],
 		description: "Set IR filter and light state together",
 		responses: {

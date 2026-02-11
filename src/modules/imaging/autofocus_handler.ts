@@ -16,6 +16,7 @@ const autofocusAdapter = z.object({
 
 const AutofocusHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Autofocus",
 		tags: ["Imaging"],
 		description: "Set autofocus mode",
 		responses: {

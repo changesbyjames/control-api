@@ -19,6 +19,7 @@ const areazoomAdapter = z.object({
 
 const AreazoomHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Area Zoom",
 		tags: ["PTZ"],
 		description: "Zoom to an area defined by x, y, and z",
 		responses: {

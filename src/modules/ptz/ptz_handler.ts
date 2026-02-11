@@ -30,6 +30,7 @@ const ptzAdapter = z
 
 const PTZHandler: Handler = {
 	openapi: describeRoute({
+		summary: "PTZ",
 		tags: ["PTZ"],
 		description: "Make requests to change the pan, zoom and tilt of a camera",
 		responses: {

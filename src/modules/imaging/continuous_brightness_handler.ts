@@ -16,6 +16,7 @@ const cbrightnessAdapter = z.object({
 
 const CBrightnessHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Continuous Brightness",
 		tags: ["Imaging"],
 		description: "Set continuous brightness movement",
 		responses: {

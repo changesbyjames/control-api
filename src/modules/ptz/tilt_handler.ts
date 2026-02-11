@@ -16,6 +16,7 @@ const tiltAdapter = z.object({
 
 const TiltHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Tilt",
 		tags: ["PTZ"],
 		description: "Set absolute tilt of the camera",
 		responses: {

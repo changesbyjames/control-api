@@ -22,6 +22,7 @@ const moveAdapter = z.object({
 
 const MoveHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Move",
 		tags: ["PTZ"],
 		description: "Move the camera in a cardinal direction",
 		responses: {

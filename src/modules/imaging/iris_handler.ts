@@ -16,6 +16,7 @@ const irisAdapter = z.object({
 
 const IrisHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Iris",
 		tags: ["Imaging"],
 		description: "Set absolute iris level",
 		responses: {

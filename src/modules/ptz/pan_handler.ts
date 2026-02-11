@@ -16,6 +16,7 @@ const panAdapter = z.object({
 
 const PanHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Pan",
 		tags: ["PTZ"],
 		description: "Set absolute pan of the camera",
 		responses: {

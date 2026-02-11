@@ -16,6 +16,7 @@ const cfocusAdapter = z.object({
 
 const CFocusHandler: Handler = {
 	openapi: describeRoute({
+		summary: "Continuous Focus",
 		tags: ["Imaging"],
 		description: "Set continuous focus movement",
 		responses: {
