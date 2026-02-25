@@ -4,6 +4,7 @@ import * as constants from "@/constants";
 import { RegisterUnauthenticatedRoute, type Module } from "@/modules/module";
 
 import GetCapabilitiesHandler from "./get_capabilities_handler";
+import GetSpecsHandler from "./get_specs_handler";
 
 const ConfigModule: Module = {
 	name: "Config",
@@ -17,6 +18,14 @@ const ConfigModule: Module = {
 			"/capabilities/:camera",
 			GetCapabilitiesHandler.openapi,
 			...GetCapabilitiesHandler.handle(),
+		);
+
+		RegisterUnauthenticatedRoute(
+			ConfigModule,
+			"GET",
+			"/specs/:camera",
+			GetSpecsHandler.openapi,
+			...GetSpecsHandler.handle(),
 		);
 
 		return ConfigModule;
