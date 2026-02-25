@@ -1,8 +1,10 @@
 import type { Context } from "hono";
 import { type StatusCode } from "hono/utils/http-status";
 import * as z from "zod";
+import _ from "lodash";
 
 import * as constants from "@/constants";
+import type { Camera } from "./models";
 
 interface APIError {
 	code: number;
@@ -65,4 +67,36 @@ export function mapTopicToFriendlyName(topic: string): string | undefined {
 		}
 	}
 	return undefined;
+}
+
+export function calculateHFOV(zoom: number, camera: Camera) {
+	zoom = Math.min(zoom, 9999);
+	let focalLength =
+		camera.specs.focalLength.min +
+		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
+			(zoom - 1)) /
+			9998;
+
+	return _.round(
+		2 *
+			Math.atan(camera.specs.sensorWidth / (2 * focalLength)) *
+			(180 / Math.PI),
+		3,
+	);
+}
+
+export function calculateVFOV(zoom: number, camera: Camera) {
+	zoom = Math.min(zoom, 9999);
+	let focalLength =
+		camera.specs.focalLength.min +
+		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
+			(zoom - 1)) /
+			9998;
+
+	return _.round(
+		2 *
+			Math.atan(camera.specs.sensorHeight / (2 * focalLength)) *
+			(180 / Math.PI),
+		3,
+	);
 }

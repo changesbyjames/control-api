@@ -1,7 +1,6 @@
 import type { Camera, Observer, Message } from "@/models";
 import { WebSocketManager, VAPIXManager } from "@/managers";
-import { formatQueryResponse } from "@/utils";
-import _ from "lodash";
+import { formatQueryResponse, calculateHFOV, calculateVFOV } from "@/utils";
 
 const PTZObserver: Observer = {
 	name: "ptz movement",
@@ -112,35 +111,3 @@ const PTZObserver: Observer = {
 };
 
 export default PTZObserver;
-
-function calculateHFOV(zoom: number, camera: Camera) {
-	zoom = Math.min(zoom, 9999);
-	let focalLength =
-		camera.specs.focalLength.min +
-		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
-			(zoom - 1)) /
-			9998;
-
-	return _.round(
-		2 *
-			Math.atan(camera.specs.sensorWidth / (2 * focalLength)) *
-			(180 / Math.PI),
-		3,
-	);
-}
-
-function calculateVFOV(zoom: number, camera: Camera) {
-	zoom = Math.min(zoom, 9999);
-	let focalLength =
-		camera.specs.focalLength.min +
-		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
-			(zoom - 1)) /
-			9998;
-
-	return _.round(
-		2 *
-			Math.atan(camera.specs.sensorHeight / (2 * focalLength)) *
-			(180 / Math.PI),
-		3,
-	);
-}
