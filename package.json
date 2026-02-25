@@ -26,12 +26,14 @@
 		"dotenv": "^17.2.3",
 		"hono": "^4.10.7",
 		"hono-openapi": "^1.2.0",
+		"lodash": "^4.17.23",
 		"pretty-js-log": "^1.2.0",
 		"tsx": "^4.21.0",
 		"ws": "^8.19.0",
 		"zod": "^4.1.13"
 	},
 	"devDependencies": {
+		"@types/lodash": "^4.17.24",
 		"@types/node": "^20.19.27",
 		"@types/ws": "^8.18.1",
 		"husky": "^9.1.7",
