@@ -95,6 +95,9 @@ const PTZObserver: Observer = {
 
 			info = formatQueryResponse(await response.text());
 
+			info.hfov = calculateHFOV(info.zoom, camera);
+			info.vfov = calculateVFOV(info.zoom, camera);
+
 			is_moving = false;
 		}
 
@@ -108,3 +111,33 @@ const PTZObserver: Observer = {
 };
 
 export default PTZObserver;
+
+function calculateHFOV(zoom: number, camera: Camera) {
+	zoom = Math.min(zoom, 9999);
+	let focalLength =
+		camera.specs.focalLength.min +
+		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
+			(zoom - 1)) /
+			9998;
+
+	return (
+		2 *
+		Math.atan(camera.specs.sensorWidth / (2 * focalLength)) *
+		(180 / Math.PI)
+	);
+}
+
+function calculateVFOV(zoom: number, camera: Camera) {
+	zoom = Math.min(zoom, 9999);
+	let focalLength =
+		camera.specs.focalLength.min +
+		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
+			(zoom - 1)) /
+			9998;
+
+	return (
+		2 *
+		Math.atan(camera.specs.sensorHeight / (2 * focalLength)) *
+		(180 / Math.PI)
+	);
+}
