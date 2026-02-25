@@ -1,4 +1,4 @@
-export type { Camera } from "./camera";
+export type { Camera, Specs } from "./camera";
 export type {
 	Observer,
 	CameraTopics,

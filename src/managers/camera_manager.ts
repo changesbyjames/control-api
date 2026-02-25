@@ -1,7 +1,7 @@
 import DigestClient from "digest-fetch";
 import WebSocket from "ws";
 
-import type { Camera } from "@/models";
+import type { Camera, Specs } from "@/models";
 import * as constants from "@/constants";
 import { WebSocketManager } from "@/managers";
 
@@ -13,6 +13,7 @@ interface cameraConfig {
 	host: string;
 	capabilities: string[];
 	topics: string[];
+	specs: Specs;
 }
 
 class CameraManager {
@@ -40,6 +41,7 @@ class CameraManager {
 			host: newCamera.host,
 			client: new DigestClient(username, password),
 			capabilities: new Set(newCamera.capabilities),
+			specs: newCamera.specs,
 		};
 
 		this.#cameras[newCamera.name] = camera;

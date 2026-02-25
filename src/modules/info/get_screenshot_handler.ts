@@ -38,7 +38,9 @@ const GetScreenshotHandler: Handler = {
 				);
 			}
 
-			let url = VAPIXManager.URLBuilder(camera.host, "jpg/image");
+			let url = VAPIXManager.URLBuilder(camera.host, "jpg/image", {
+				compression: 0,
+			});
 
 			let response;
 			try {
