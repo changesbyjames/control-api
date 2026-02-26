@@ -6,3 +6,4 @@ export type {
 	TopicsMap,
 } from "./observer";
 export type { Message, RawMessage } from "./websocket_message";
+export type { FOV } from "./fov.ts";

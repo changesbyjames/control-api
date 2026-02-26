@@ -8,8 +8,7 @@ import {
 	APIErrorResponse,
 	formatQueryResponse,
 	PositionMapSchema,
-	calculateHFOV,
-	calculateVFOV,
+	getFOV,
 } from "@/utils";
 import { ErrorCode } from "@/errors/error_codes";
 import * as errors from "@/errors/errors";
@@ -70,8 +69,7 @@ const GetInfoHandler: Handler = {
 			}
 
 			let info = formatQueryResponse(await response.text());
-			info.hfov = calculateHFOV(info.zoom, camera);
-			info.vfov = calculateVFOV(info.zoom, camera);
+			info.fov = getFOV(info.pan, info.tilt, info.zoom, camera);
 
 			return ctx.json(info);
 		});

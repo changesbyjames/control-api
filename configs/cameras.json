@@ -11,32 +11,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q6318-LE",
-			"hfov": {
-				"max": 58.5,
-				"min": 2.3
-			},
-			"vfov": {
-				"max": 34.9,
-				"min": 1.4
-			},
-			"focalLength": {
-				"max": 214.64,
-				"min": 6.91
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 20,
-				"min": -90
-			},
-			"sensorWidth": 8.178,
-			"sensorHeight": 4.795
-		}
+		]
 	},
 	{
 		"name": "pushpopoutdoor",
@@ -56,32 +31,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P5676-LE",
-			"hfov": {
-				"max": 57.1,
-				"min": 2.1
-			},
-			"vfov": {
-				"max": 34.4,
-				"min": 1.2
-			},
-			"focalLength": {
-				"max": 135,
-				"min": 4.5
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 4.923,
-			"sensorHeight": 2.807
-		}
+		]
 	},
 	{
 		"name": "pushpopindoor",
@@ -95,32 +45,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "pushpopcrunch",
@@ -134,68 +59,19 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q3536-LVE-9mm",
-			"hfov": {
-				"max": 103,
-				"min": 53
-			},
-			"vfov": {
-				"max": 56,
-				"min": 30
-			},
-			"focalLength": {
-				"max": 8.6,
-				"min": 4.3
-			},
-			"pan": {
-				"min": 0,
-				"max": 0
-			},
-			"tilt": {
-				"min": 0,
-				"max": 0
-			},
-			"sensorWidth": 9.694,
-			"sensorHeight": 4.591
-		}
+		]
 	},
 	{
 		"name": "hank",
 		"host": "hankptz.cam",
 		"capabilities": [
-			"PTZ"
+			"PTZ",
+			"Screenshots"
 		],
 		"topics": [
 			"ptz",
 			"heartbeat"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "marmosetindoor",
@@ -209,32 +85,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P5676-LE",
-			"hfov": {
-				"max": 57.1,
-				"min": 2.1
-			},
-			"vfov": {
-				"max": 34.4,
-				"min": 1.2
-			},
-			"focalLength": {
-				"max": 135,
-				"min": 4.5
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 4.923,
-			"sensorHeight": 2.807
-		}
+		]
 	},
 	{
 		"name": "marmosetoutdoor",
@@ -248,32 +99,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q6318-LE",
-			"hfov": {
-				"max": 58.5,
-				"min": 2.3
-			},
-			"vfov": {
-				"max": 34.9,
-				"min": 1.4
-			},
-			"focalLength": {
-				"max": 214.64,
-				"min": 6.91
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 20,
-				"min": -90
-			},
-			"sensorWidth": 8.178,
-			"sensorHeight": 4.795
-		}
+		]
 	},
 	{
 		"name": "crowoutdoor",
@@ -283,32 +109,7 @@
 			"Screenshots",
 			"IrCutFilter"
 		],
-		"topics": [],
-		"specs": {
-			"type": "M5525-E",
-			"hfov": {
-				"max": 61.8,
-				"min": 6.7
-			},
-			"vfov": {
-				"max": 37.2,
-				"min": 3.8
-			},
-			"focalLength": {
-				"max": 47,
-				"min": 4.7
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 5.564,
-			"sensorHeight": 3.141
-		}
+		"topics": []
 	},
 	{
 		"name": "crowindoor",
@@ -318,32 +119,7 @@
 			"Screenshots",
 			"IrCutFilter"
 		],
-		"topics": [],
-		"specs": {
-			"type": "M5525-E",
-			"hfov": {
-				"max": 61.8,
-				"min": 6.7
-			},
-			"vfov": {
-				"max": 37.2,
-				"min": 3.8
-			},
-			"focalLength": {
-				"max": 47,
-				"min": 4.7
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 5.564,
-			"sensorHeight": 3.141
-		}
+		"topics": []
 	},
 	{
 		"name": "georgie",
@@ -357,32 +133,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "georgiewater",
@@ -396,32 +147,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P12-Mk-III",
-			"hfov": {
-				"max": 0,
-				"min": 0
-			},
-			"vfov": {
-				"max": 0,
-				"min": 0
-			},
-			"focalLength": {
-				"max": 0,
-				"min": 0
-			},
-			"pan": {
-				"max": 0,
-				"min": 0
-			},
-			"tilt": {
-				"max": 0,
-				"min": 0
-			},
-			"sensorWidth": 0,
-			"sensorHeight": 0
-		}
+		]
 	},
 	{
 		"name": "patchy",
@@ -435,32 +161,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "toast",
@@ -474,32 +175,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "toastcrunch",
@@ -513,32 +189,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P12-Mk-III",
-			"hfov": {
-				"max": 0,
-				"min": 0
-			},
-			"vfov": {
-				"max": 0,
-				"min": 0
-			},
-			"focalLength": {
-				"max": 0,
-				"min": 0
-			},
-			"pan": {
-				"max": 0,
-				"min": 0
-			},
-			"tilt": {
-				"max": 0,
-				"min": 0
-			},
-			"sensorWidth": 0,
-			"sensorHeight": 0
-		}
+		]
 	},
 	{
 		"name": "noodle",
@@ -548,32 +199,7 @@
 			"Screenshots",
 			"IrCutFilter"
 		],
-		"topics": [],
-		"specs": {
-			"type": "M5525-E",
-			"hfov": {
-				"max": 61.8,
-				"min": 6.7
-			},
-			"vfov": {
-				"max": 37.2,
-				"min": 3.8
-			},
-			"focalLength": {
-				"max": 47,
-				"min": 4.7
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 5.564,
-			"sensorHeight": 3.141
-		}
+		"topics": []
 	},
 	{
 		"name": "tarantulawall",
@@ -583,32 +209,7 @@
 			"Screenshots",
 			"IrCutFilter"
 		],
-		"topics": [],
-		"specs": {
-			"type": "Q3617-VE",
-			"hfov": {
-				"max": 90,
-				"min": 41
-			},
-			"vfov": {
-				"max": 49,
-				"min": 23
-			},
-			"focalLength": {
-				"max": 9,
-				"min": 4.1
-			},
-			"pan": {
-				"max": 0,
-				"min": 0
-			},
-			"tilt": {
-				"max": 0,
-				"min": 0
-			},
-			"sensorWidth": 7.465,
-			"sensorHeight": 3.7
-		}
+		"topics": []
 	},
 	{
 		"name": "tarantula",
@@ -622,32 +223,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "marty",
@@ -661,32 +237,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "bb",
@@ -700,32 +251,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "roaches",
@@ -739,32 +265,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "M5075-G",
-			"hfov": {
-				"max": 71,
-				"min": 14
-			},
-			"vfov": {
-				"max": 40,
-				"min": 8
-			},
-			"focalLength": {
-				"max": 11.0,
-				"min": 2.2
-			},
-			"pan": {
-				"max": 179,
-				"min": -179
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 2.92,
-			"sensorHeight": 1.57
-		}
+		]
 	},
 	{
 		"name": "chickenoutdoor",
@@ -778,32 +279,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P5676-LE",
-			"hfov": {
-				"max": 57.1,
-				"min": 2.1
-			},
-			"vfov": {
-				"max": 34.4,
-				"min": 1.2
-			},
-			"focalLength": {
-				"max": 135,
-				"min": 4.5
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 4.923,
-			"sensorHeight": 2.807
-		}
+		]
 	},
 	{
 		"name": "chickenindoor",
@@ -813,32 +289,7 @@
 			"Screenshots",
 			"IrCutFilter"
 		],
-		"topics": [],
-		"specs": {
-			"type": "M5525-E",
-			"hfov": {
-				"max": 61.8,
-				"min": 6.7
-			},
-			"vfov": {
-				"max": 37.2,
-				"min": 3.8
-			},
-			"focalLength": {
-				"max": 47,
-				"min": 4.7
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 5.564,
-			"sensorHeight": 3.141
-		}
+		"topics": []
 	},
 	{
 		"name": "wolf",
@@ -852,32 +303,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q6318-LE",
-			"hfov": {
-				"max": 58.5,
-				"min": 2.3
-			},
-			"vfov": {
-				"max": 34.9,
-				"min": 1.4
-			},
-			"focalLength": {
-				"max": 214.64,
-				"min": 6.91
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 20,
-				"min": -90
-			},
-			"sensorWidth": 8.178,
-			"sensorHeight": 4.795
-		}
+		]
 	},
 	{
 		"name": "wolfcorner",
@@ -892,32 +318,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q6318-LE",
-			"hfov": {
-				"max": 58.5,
-				"min": 2.3
-			},
-			"vfov": {
-				"max": 34.9,
-				"min": 1.4
-			},
-			"focalLength": {
-				"max": 214.64,
-				"min": 6.91
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 20,
-				"min": -90
-			},
-			"sensorWidth": 8.178,
-			"sensorHeight": 4.795
-		}
+		]
 	},
 	{
 		"name": "wolfindoor",
@@ -931,32 +332,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P5676-LE",
-			"hfov": {
-				"max": 57.1,
-				"min": 2.1
-			},
-			"vfov": {
-				"max": 34.4,
-				"min": 1.2
-			},
-			"focalLength": {
-				"max": 135,
-				"min": 4.5
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 4.923,
-			"sensorHeight": 2.807
-		}
+		]
 	},
 	{
 		"name": "wolfswitch",
@@ -966,32 +342,7 @@
 			"Screenshots",
 			"IrCutFilter"
 		],
-		"topics": [],
-		"specs": {
-			"type": "Q6155-E",
-			"hfov": {
-				"max": 66.7,
-				"min": 2.36
-			},
-			"vfov": {
-				"max": 39.5,
-				"min": 1.37
-			},
-			"focalLength": {
-				"max": 129,
-				"min": 4.3
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 20,
-				"min": -90
-			},
-			"sensorWidth": 5.487,
-			"sensorHeight": 3.086
-		}
+		"topics": []
 	},
 	{
 		"name": "wolfden",
@@ -1001,32 +352,7 @@
 			"Screenshots",
 			"IrCutFilter"
 		],
-		"topics": [],
-		"specs": {
-			"type": "P1435-LE",
-			"hfov": {
-				"max": 0,
-				"min": 0
-			},
-			"vfov": {
-				"max": 0,
-				"min": 0
-			},
-			"focalLength": {
-				"max": 0,
-				"min": 0
-			},
-			"pan": {
-				"max": 0,
-				"min": 0
-			},
-			"tilt": {
-				"max": 0,
-				"min": 0
-			},
-			"sensorWidth": 0,
-			"sensorHeight": 0
-		}
+		"topics": []
 	},
 	{
 		"name": "wolfden2",
@@ -1040,32 +366,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P1455-LE",
-			"hfov": {
-				"max": 114,
-				"min": 37
-			},
-			"vfov": {
-				"max": 58,
-				"min": 21
-			},
-			"focalLength": {
-				"max": 9,
-				"min": 3
-			},
-			"pan": {
-				"max": 0,
-				"min": 0
-			},
-			"tilt": {
-				"max": 0,
-				"min": 0
-			},
-			"sensorWidth": 7.631,
-			"sensorHeight": 3.331
-		}
+		]
 	},
 	{
 		"name": "pasture",
@@ -1079,32 +380,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q6318-LE",
-			"hfov": {
-				"max": 58.5,
-				"min": 2.3
-			},
-			"vfov": {
-				"max": 34.9,
-				"min": 1.4
-			},
-			"focalLength": {
-				"max": 214.64,
-				"min": 6.91
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 20,
-				"min": -90
-			},
-			"sensorWidth": 8.178,
-			"sensorHeight": 4.795
-		}
+		]
 	},
 	{
 		"name": "pasturefeeder",
@@ -1118,32 +394,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q3536-LVE-9mm",
-			"hfov": {
-				"max": 103,
-				"min": 53
-			},
-			"vfov": {
-				"max": 56,
-				"min": 30
-			},
-			"focalLength": {
-				"max": 8.6,
-				"min": 4.3
-			},
-			"pan": {
-				"min": 0,
-				"max": 0
-			},
-			"tilt": {
-				"min": 0,
-				"max": 0
-			},
-			"sensorWidth": 9.694,
-			"sensorHeight": 4.591
-		}
+		]
 	},
 	{
 		"name": "emu",
@@ -1157,32 +408,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P5676-LE",
-			"hfov": {
-				"max": 57.1,
-				"min": 2.1
-			},
-			"vfov": {
-				"max": 34.4,
-				"min": 1.2
-			},
-			"focalLength": {
-				"max": 135,
-				"min": 4.5
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 4.923,
-			"sensorHeight": 2.807
-		}
+		]
 	},
 	{
 		"name": "parrot",
@@ -1196,32 +422,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P5676-LE",
-			"hfov": {
-				"max": 57.1,
-				"min": 2.1
-			},
-			"vfov": {
-				"max": 34.4,
-				"min": 1.2
-			},
-			"focalLength": {
-				"max": 135,
-				"min": 4.5
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 4.923,
-			"sensorHeight": 2.807
-		}
+		]
 	},
 	{
 		"name": "macaws",
@@ -1235,32 +436,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "P5676-LE",
-			"hfov": {
-				"max": 57.1,
-				"min": 2.1
-			},
-			"vfov": {
-				"max": 34.4,
-				"min": 1.2
-			},
-			"focalLength": {
-				"max": 135,
-				"min": 4.5
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 0,
-				"min": -90
-			},
-			"sensorWidth": 4.923,
-			"sensorHeight": 2.807
-		}
+		]
 	},
 	{
 		"name": "fox",
@@ -1276,32 +452,7 @@
 			"ptz",
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "Q6358-LE",
-			"hfov": {
-				"max": 58.5,
-				"min": 2.3
-			},
-			"vfov": {
-				"max": 34.9,
-				"min": 1.4
-			},
-			"focalLength": {
-				"max": 214.64,
-				"min": 6.91
-			},
-			"pan": {
-				"max": 180,
-				"min": -180
-			},
-			"tilt": {
-				"max": 20,
-				"min": -90
-			},
-			"sensorWidth": 8.178,
-			"sensorHeight": 4.795
-		}
+		]
 	},
 	{
 		"name": "chins",
@@ -1312,31 +463,6 @@
 		"topics": [
 			"heartbeat",
 			"ir"
-		],
-		"specs": {
-			"type": "AXIS F9114",
-			"hfov": {
-				"max": 0,
-				"min": 0
-			},
-			"vfov": {
-				"max": 0,
-				"min": 0
-			},
-			"focalLength": {
-				"max": 0,
-				"min": 0
-			},
-			"pan": {
-				"max": 0,
-				"min": 0
-			},
-			"tilt": {
-				"max": 0,
-				"min": 0
-			},
-			"sensorWidth": 0,
-			"sensorHeight": 0
-		}
+		]
 	}
 ]

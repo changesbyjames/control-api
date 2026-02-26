@@ -4,7 +4,7 @@ import * as z from "zod";
 import _ from "lodash";
 
 import * as constants from "@/constants";
-import type { Camera } from "./models";
+import type { Camera, FOV } from "./models";
 
 interface APIError {
 	code: number;
@@ -69,34 +69,41 @@ export function mapTopicToFriendlyName(topic: string): string | undefined {
 	return undefined;
 }
 
-export function calculateHFOV(zoom: number, camera: Camera) {
-	zoom = Math.min(zoom, 9999);
-	let focalLength =
-		camera.specs.focalLength.min +
-		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
-			(zoom - 1)) /
-			9998;
+export function getFOV(
+	pan: number,
+	tilt: number,
+	zoom: number,
+	camera: Camera,
+): FOV {
+	zoom = Math.max(1, Math.min(zoom, 9999));
 
-	return _.round(
-		2 *
-			Math.atan(camera.specs.sensorWidth / (2 * focalLength)) *
-			(180 / Math.PI),
-		3,
-	);
-}
+	let focalLength: number = camera.specs.focalLength.min;
+	const zoomSteps = camera.specs.zoomSteps;
 
-export function calculateVFOV(zoom: number, camera: Camera) {
-	zoom = Math.min(zoom, 9999);
-	let focalLength =
-		camera.specs.focalLength.min +
-		((camera.specs.focalLength.max - camera.specs.focalLength.min) *
-			(zoom - 1)) /
-			9998;
+	for (let i = 0; i < zoomSteps.length; i++) {
+		const step = zoomSteps[i];
+		const nextStep = zoomSteps[i + 1];
+		if (zoom >= step[1]) {
+			let range = nextStep[1] - step[1];
+			let distance = zoom - step[1];
+			let multiplier = step[0] + _.round(distance / range, 2);
+			focalLength = camera.specs.focalLength.min * multiplier;
+		}
+	}
 
-	return _.round(
-		2 *
-			Math.atan(camera.specs.sensorHeight / (2 * focalLength)) *
-			(180 / Math.PI),
-		3,
-	);
+	const sensorWidth = camera.specs.sensorWidth;
+	const sensorHeight = camera.specs.sensorHeight;
+
+	const hFoV = 2 * Math.atan(sensorWidth / (2 * focalLength)) * (180 / Math.PI);
+	const vFoV =
+		2 * Math.atan(sensorHeight / (2 * focalLength)) * (180 / Math.PI);
+
+	const places = 2;
+	return {
+		hFOV: _.round(hFoV, places),
+		vFOV: _.round(vFoV, places),
+		focalLength: _.round(focalLength, places),
+		x: _.round(pan - hFoV / 2, places),
+		y: _.round(tilt + vFoV / 2, places),
+	};
 }

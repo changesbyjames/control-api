@@ -14,6 +14,7 @@ export interface Specs {
 	tilt: MinMax;
 	sensorWidth: number;
 	sensorHeight: number;
+	zoomSteps: [number, number][];
 }
 
 export interface Camera {

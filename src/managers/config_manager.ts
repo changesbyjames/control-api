@@ -34,6 +34,10 @@ class ConfigManager {
 		return this.#configs[constants.CameraConfigKey];
 	}
 
+	getAllCameraSpecs(): any[] {
+		return this.#configs[constants.CameraSpecsKey];
+	}
+
 	getServiceConfig(): any {
 		return this.#configs[constants.ServiceConfigKey];
 	}

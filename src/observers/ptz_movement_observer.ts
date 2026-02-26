@@ -1,6 +1,6 @@
 import type { Camera, Observer, Message } from "@/models";
 import { WebSocketManager, VAPIXManager } from "@/managers";
-import { formatQueryResponse, calculateHFOV, calculateVFOV } from "@/utils";
+import { formatQueryResponse, getFOV } from "@/utils";
 
 const PTZObserver: Observer = {
 	name: "ptz movement",
@@ -94,9 +94,7 @@ const PTZObserver: Observer = {
 			}
 
 			info = formatQueryResponse(await response.text());
-
-			info.hfov = calculateHFOV(info.zoom, camera);
-			info.vfov = calculateVFOV(info.zoom, camera);
+			info.fov = getFOV(info.pan, info.tilt, info.zoom, camera);
 
 			is_moving = false;
 		}

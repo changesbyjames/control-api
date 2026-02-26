@@ -39,8 +39,13 @@ class Server {
 			throw new Error();
 		}
 
+		let allCamSpecs: any[] = managers.ConfigManager.getAllCameraSpecs();
+		if (allCamSpecs.length == 0) {
+			throw new Error();
+		}
+
 		for (const [k, v] of Object.entries(allCamConfigs)) {
-			managers.CameraManager.loadCamera(v);
+			managers.CameraManager.loadCamera(v, allCamSpecs[v.name]);
 		}
 
 		// Service setup is also done here even though it's not a manager because manager initialization is the first thing that happens

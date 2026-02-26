@@ -13,7 +13,6 @@ interface cameraConfig {
 	host: string;
 	capabilities: string[];
 	topics: string[];
-	specs: Specs;
 }
 
 class CameraManager {
@@ -23,7 +22,7 @@ class CameraManager {
 		this.#cameras = {};
 	}
 
-	loadCamera(newCamera: cameraConfig): void {
+	loadCamera(newCamera: cameraConfig, specs: Specs): void {
 		let username = process.env[newCamera.name.toUpperCase() + usernameKey];
 		if (!username) {
 			console.log(`Unable to get username for ${newCamera.name} cam`);
@@ -41,7 +40,7 @@ class CameraManager {
 			host: newCamera.host,
 			client: new DigestClient(username, password),
 			capabilities: new Set(newCamera.capabilities),
-			specs: newCamera.specs,
+			specs: specs,
 		};
 
 		this.#cameras[newCamera.name] = camera;
