@@ -88,6 +88,7 @@ export function getFOV(
 			let distance = zoom - step[1];
 			let multiplier = step[0] + _.round(distance / range, 2);
 			focalLength = camera.specs.focalLength.min * multiplier;
+			break;
 		}
 	}
 
