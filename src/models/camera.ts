@@ -1,5 +1,10 @@
 import type DigestClient from "digest-fetch";
 
+interface Resolution {
+	width: number;
+	height: number;
+}
+
 interface MinMax {
 	min: number;
 	max: number;
@@ -7,6 +12,7 @@ interface MinMax {
 
 export interface Specs {
 	type: string;
+	maxResolution: Resolution;
 	hfov: MinMax;
 	vfov: MinMax;
 	focalLength: MinMax;
