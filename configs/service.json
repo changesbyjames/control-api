@@ -1,7 +1,6 @@
 {
 	"serverPort": 1229,
 	"websocketPort": 3130,
-	"tunnelUrl": "ws://localhost:8787/api/control/connect",
 	"moduleMap": {
 		"Config": true,
 		"DayNight": true,
